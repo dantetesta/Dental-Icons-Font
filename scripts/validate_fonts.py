@@ -58,7 +58,7 @@ def validate_tables(path: Path, label: str, family: str) -> None:
         require({"gasp", "prep"} <= set(font.keys()), f"{path.name}: missing TrueType rasterization tables")
 
     require(font["head"].unitsPerEm == 1000, f"{path.name}: unexpected unitsPerEm")
-    require(round(font["head"].fontRevision, 3) == 1.1, f"{path.name}: wrong revision")
+    require(round(font["head"].fontRevision, 3) == 1.101, f"{path.name}: wrong revision")
     require(font["hhea"].ascent == 800 and font["hhea"].descent == -200, f"{path.name}: bad hhea metrics")
     require(font["hhea"].numberOfHMetrics == len(font.getGlyphOrder()), f"{path.name}: compressed/incomplete hmtx")
 
@@ -67,6 +67,7 @@ def validate_tables(path: Path, label: str, family: str) -> None:
     require(os2.fsType == 0, f"{path.name}: embedding is not installable")
     require(os2.fsSelection & 0x1C0 == 0x1C0, f"{path.name}: Regular/USE_TYPO_METRICS/WWS flags missing")
     require(os2.achVendID == "Dtst", f"{path.name}: invalid vendor ID")
+    require(os2.panose.bFamilyType == 2, f"{path.name}: document editors may hide non-text PANOSE families")
     require((os2.sTypoAscender, os2.sTypoDescender, os2.sTypoLineGap) == (800, -200, 0), f"{path.name}: typo metrics mismatch")
     require((os2.usWinAscent, os2.usWinDescent) == (800, 200), f"{path.name}: Windows clipping metrics mismatch")
     require(os2.ulCodePageRange1 & 1, f"{path.name}: Latin 1 code-page bit missing")
@@ -80,7 +81,7 @@ def validate_tables(path: Path, label: str, family: str) -> None:
     cmap = font.getBestCmap()
     require({0, 13, 32, 160, 124} <= set(cmap), f"{path.name}: control/space cmap incomplete")
     require(PUA <= set(cmap), f"{path.name}: direct PUA fallback map incomplete")
-    require({ord(c) for c in "ILCMPilcmp123"} <= set(cmap), f"{path.name}: typing cmap incomplete")
+    require({ord(c) for c in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"} <= set(cmap), f"{path.name}: basic alphanumeric cmap incomplete")
 
     glyph_set = font.getGlyphSet()
     for glyph_name in font.getGlyphOrder():

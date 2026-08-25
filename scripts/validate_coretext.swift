@@ -42,12 +42,13 @@ for argument in CommandLine.arguments.dropFirst() {
     let postScript = CTFontDescriptorCopyAttribute(descriptor, kCTFontNameAttribute) as? String ?? ""
 
     let font = CTFontCreateWithFontDescriptor(descriptor, 72, nil)
+    let languages = CTFontCopySupportedLanguages(font) as? [String] ?? []
     let composed = shapedGlyphNames("M1", font: font)
     let paired = shapedGlyphNames("m1 M1", font: font)
     let rightSide = shapedGlyphNames("| I L C P1 P2 M1 M2 M3", font: font).filter { $0.hasSuffix("_r") }
 
     if !family.hasPrefix("Dental Icons ") || style != "Regular" || !postScript.hasSuffix("-Regular") ||
-       composed != ["prof_m1_l"] || paired != ["occl_m1_l", "space", "prof_m1_l"] || rightSide.count != 8 {
+       !languages.contains("en") || composed != ["prof_m1_l"] || paired != ["occl_m1_l", "space", "prof_m1_l"] || rightSide.count != 8 {
         fputs("FAIL \(argument): CoreText identity/shaping mismatch \(family) | \(style) | \(postScript) | \(composed) | \(paired) | right=\(rightSide.count)\n", stderr)
         failed = true
     } else {

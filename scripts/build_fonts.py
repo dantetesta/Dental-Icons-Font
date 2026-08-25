@@ -27,8 +27,8 @@ ROOT = Path(__file__).resolve().parents[1]
 VECTORS = ROOT / "assets" / "reference-vectors"
 BUILD = ROOT / "build" / "fonts"
 PUBLIC_DOWNLOADS = ROOT / "dental-icons-font" / "downloads"
-VERSION = "1.1.0-beta"
-FONT_REVISION = 1.100
+VERSION = "1.1.1-beta"
+FONT_REVISION = 1.101
 UPM = 1000
 PROFILE_HEIGHT = 194
 OCCLUSAL_HEIGHT = 112
@@ -227,6 +227,10 @@ def collect_outlines(arch: str, kind: str, temporary: Path):
     outlines = {
         ".notdef": notdef_outline(kind), ".null": empty_outline(kind, 0),
         "nonmarkingreturn": empty_outline(kind, 0), "bar": bar_outline(kind),
+        # A visible fallback keeps a complete basic alphanumeric repertoire.
+        # Pages filters families that do not advertise any supported text
+        # language, even when CoreText and Font Book accept the font itself.
+        "unsupported": notdef_outline(kind),
         "Mbase": fallback_letter_outline(kind, "M"),
         "Pbase": fallback_letter_outline(kind, "P"), "mbase": fallback_letter_outline(kind, "m"),
         "pbase": fallback_letter_outline(kind, "p"), "one": fallback_digit_outline(kind, "1"),
@@ -282,6 +286,8 @@ def character_map() -> dict[int, str]:
             mapping[PUA_START + view_index * 16 + position] = glyph_name(view, code, "l")
         for position, code in enumerate(RIGHT_CODES, 8):
             mapping[PUA_START + view_index * 16 + position] = glyph_name(view, code, "r")
+    for character in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789":
+        mapping.setdefault(ord(character), "unsupported")
     return mapping
 
 
@@ -302,7 +308,19 @@ def setup_common(builder: FontBuilder, family: str, postscript: str, glyph_order
         "typographicFamily": family, "typographicSubfamily": "Regular",
         "sampleText": "M3 M2 M1 P2 P1 C L I | I L C P1 P2 M1 M2 M3",
     }, windows=True, mac=False)
-    panose = Panose(); panose.bFamilyType = 5
+    # Present the family to document editors as a Latin text-capable display
+    # face. Marking it as Pictorial makes Pages hide it from its font chooser.
+    panose = Panose()
+    panose.bFamilyType = 2
+    panose.bSerifStyle = 11
+    panose.bWeight = 5
+    panose.bProportion = 3
+    panose.bContrast = 2
+    panose.bStrokeVariation = 2
+    panose.bArmStyle = 2
+    panose.bLetterForm = 2
+    panose.bMidline = 2
+    panose.bXHeight = 3
     builder.setupOS2(
         version=4, xAvgCharWidth=475, usWeightClass=400, usWidthClass=5, fsType=0,
         ySubscriptXSize=650, ySubscriptYSize=600, ySubscriptXOffset=0, ySubscriptYOffset=75,
