@@ -58,7 +58,7 @@ def validate_tables(path: Path, label: str, family: str) -> None:
         require({"gasp", "prep"} <= set(font.keys()), f"{path.name}: missing TrueType rasterization tables")
 
     require(font["head"].unitsPerEm == 1000, f"{path.name}: unexpected unitsPerEm")
-    require(round(font["head"].fontRevision, 3) == 1.103, f"{path.name}: wrong revision")
+    require(round(font["head"].fontRevision, 3) == 1.104, f"{path.name}: wrong revision")
     require(font["hhea"].ascent == 800 and font["hhea"].descent == -200, f"{path.name}: bad hhea metrics")
     require(font["hhea"].numberOfHMetrics == len(font.getGlyphOrder()), f"{path.name}: compressed/incomplete hmtx")
 
@@ -93,6 +93,19 @@ def validate_tables(path: Path, label: str, family: str) -> None:
         _, y_min, _, y_max = pen.bounds
         require(y_min >= -200 and y_max <= 800, f"{path.name}: {glyph_name} can be clipped ({y_min}, {y_max})")
 
+    # Regression guard for the 1.1.4 optical-size correction. These checks make
+    # sure a future build does not silently return to the undersized 4.2 scale.
+    for glyph_name, minimum_width in (("prof_m3_l", 475), ("occl_m1_l", 425)):
+        pen = BoundsPen(glyph_set)
+        glyph_set[glyph_name].draw(pen)
+        x_min, _, x_max, _ = pen.bounds
+        require(x_max - x_min >= minimum_width, f"{path.name}: {glyph_name} optical scale regressed")
+    for glyph_name in ("menu_o", "menu_d", "menu_b"):
+        pen = BoundsPen(glyph_set)
+        glyph_set[glyph_name].draw(pen)
+        x_min, y_min, x_max, y_max = pen.bounds
+        require(x_max - x_min >= 350 and y_max - y_min >= 700, f"{path.name}: {glyph_name} menu letter is not legible")
+
 
 def shape(path: Path, text: str, features: str = "ccmp=1,liga=1,calt=1,kern=1") -> list[str]:
     result = subprocess.run(
@@ -110,6 +123,13 @@ def validate_shaping(path: Path) -> None:
     require(right == ["prof_i_r", "prof_l_r", "prof_c_r", "prof_p1_r", "prof_p2_r", "prof_m1_r", "prof_m2_r", "prof_m3_r"], f"{path.name}: right-side contextual sequence failed: {right}")
     require(shape(path, "M1", "ccmp=0,liga=0,calt=0,kern=0") == ["Mbase", "one"], f"{path.name}: visible non-ligature fallback failed")
     require(shape(path, "\ue000") == ["prof_m3_l"], f"{path.name}: direct PUA fallback failed")
+    require(
+        shape(path, "ODONTO ABOVE") == [
+            "menu_o", "menu_d", "menu_o", "menu_n", "menu_t", "menu_o", "space",
+            "menu_a", "menu_b", "menu_o", "menu_v", "menu_e",
+        ],
+        f"{path.name}: application-menu family name is not readable",
+    )
 
 
 def validate_fontconfig(path: Path, expected_family: str) -> None:

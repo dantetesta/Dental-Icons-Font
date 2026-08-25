@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import re
+import math
 import shutil
 import subprocess
 import tempfile
@@ -27,17 +28,26 @@ ROOT = Path(__file__).resolve().parents[1]
 VECTORS = ROOT / "assets" / "reference-vectors"
 BUILD = ROOT / "build" / "fonts"
 PUBLIC_DOWNLOADS = ROOT / "dental-icons-font" / "downloads"
-VERSION = "1.1.3-beta"
-FONT_REVISION = 1.103
+VERSION = "1.1.4-beta"
+FONT_REVISION = 1.104
 UPM = 1000
 PROFILE_HEIGHT = 194
 OCCLUSAL_HEIGHT = 112
-LOGICAL_TO_FONT = 4.2
+# Optical scale of the dental drawings inside the 1000-unit em. The previous
+# 4.2 factor left excessive internal whitespace and made the icons look much
+# smaller than ordinary text at the same point size. At 5.0 the widest teeth
+# occupy almost the complete 520-unit advance while remaining inside the
+# vertical clipping limits used by Pages, Word and PDF exporters.
+LOGICAL_TO_FONT = 5.0
 ADVANCE = 520
 VERTICAL_SHIFT = -140
-FONT_TIMESTAMP = 3870417600  # 2026-08-24 12:00 UTC in the OpenType epoch.
+FONT_TIMESTAMP = 3870504000  # 2026-08-25 12:00 UTC in the OpenType epoch.
 PUA_START = 0xE000
 MENU_LETTERS = "ABDENORTUV"
+MENU_WIDTHS = {
+    "A": 500, "B": 500, "D": 520, "E": 460, "N": 520,
+    "O": 540, "R": 500, "T": 480, "U": 520, "V": 500,
+}
 LEFT_CODES = ["M3", "M2", "M1", "P2", "P1", "C", "L", "I"]
 RIGHT_CODES = ["I", "L", "C", "P1", "P2", "M1", "M2", "M3"]
 
@@ -89,7 +99,14 @@ def outline_for(source: Path, temporary: Path, kind: str):
     # the logical SVG. This transform restores the logical geometry, flips it
     # to the font coordinate system, and scales it into the em square.
     scale = LOGICAL_TO_FONT / 100
-    transform = (scale, 0, 0, -scale, 25, logical_height * LOGICAL_TO_FONT + VERTICAL_SHIFT)
+    # The source canvas is 112 logical units wide. Centering from that canvas,
+    # instead of retaining the old fixed 25-unit offset, preserves equal side
+    # bearings after the optical enlargement.
+    horizontal_shift = (ADVANCE - 112 * LOGICAL_TO_FONT) / 2
+    transform = (
+        scale, 0, 0, -scale, horizontal_shift,
+        logical_height * LOGICAL_TO_FONT + VERTICAL_SHIFT,
+    )
     if kind == "ttf":
         base = TTGlyphPen(None)
         pen = TransformPen(Cu2QuPen(base, max_err=1.0, reverse_direction=True), transform)
@@ -123,6 +140,34 @@ def polygon(pen, points: list[tuple[int, int]]) -> None:
     for point in points[1:]:
         pen.lineTo(point)
     pen.closePath()
+
+
+def rounded_rect_points(
+    x_min: int, y_min: int, x_max: int, y_max: int, radius: int, steps: int = 5
+) -> list[tuple[int, int]]:
+    """Return a clockwise-quality polygonal rounded rectangle contour."""
+    radius = min(radius, (x_max - x_min) // 2, (y_max - y_min) // 2)
+    points: list[tuple[int, int]] = []
+    corners = (
+        (x_max - radius, y_min + radius, -90, 0),
+        (x_max - radius, y_max - radius, 0, 90),
+        (x_min + radius, y_max - radius, 90, 180),
+        (x_min + radius, y_min + radius, 180, 270),
+    )
+    for cx, cy, start, end in corners:
+        for index in range(steps + 1):
+            angle = math.radians(start + (end - start) * index / steps)
+            point = (round(cx + radius * math.cos(angle)), round(cy + radius * math.sin(angle)))
+            if not points or point != points[-1]:
+                points.append(point)
+    return points
+
+
+def rounded_ring(
+    pen, outer: tuple[int, int, int, int, int], inner: tuple[int, int, int, int, int]
+) -> None:
+    polygon(pen, rounded_rect_points(*outer))
+    polygon(pen, list(reversed(rounded_rect_points(*inner))))
 
 
 def notdef_outline(kind: str):
@@ -164,10 +209,15 @@ def fallback_digit_outline(kind: str, digit: str):
 
 
 def menu_letter_outline(kind: str, letter: str):
-    """Small geometric capitals used only to keep macOS font menus readable."""
-    width = 420
+    """Clean custom sans capitals used only in application font menus.
+
+    Pages and Word preview the family name with the selected font itself. The
+    dental code letters cannot be replaced, so the safe letters in the names
+    ODONTO ABOVE / ODONTO UNDER receive this compact, human-readable alphabet.
+    """
+    width = MENU_WIDTHS[letter]
     pen = drawing_pen(kind, width)
-    left, right, bottom, top, middle, stroke = 45, 375, -50, 650, 300, 44
+    left, right, bottom, top, middle, stroke = 52, width - 52, -55, 675, 310, 58
 
     def horizontal(y: int) -> None:
         rectangle(pen, left, y, right, y + stroke)
@@ -176,31 +226,49 @@ def menu_letter_outline(kind: str, letter: str):
         rectangle(pen, x, y_min, x + stroke, y_max)
 
     if letter == "A":
-        polygon(pen, [(left, bottom), (left + stroke, bottom), (211, top), (190, top)])
-        polygon(pen, [(right - stroke, bottom), (right, bottom), (230, top), (209, top)])
-        rectangle(pen, 112, 255, 308, 255 + stroke)
+        center = width // 2
+        polygon(pen, [(left, bottom), (left + 66, bottom), (center + 15, top), (center - 38, top)])
+        polygon(pen, [(right - 66, bottom), (right, bottom), (center + 38, top), (center - 15, top)])
+        rectangle(pen, 135, 245, width - 135, 245 + stroke)
     elif letter == "B":
-        vertical(left); horizontal(bottom); horizontal(middle); horizontal(top - stroke)
-        vertical(right - stroke, middle, top); vertical(right - stroke, bottom, middle + stroke)
+        rectangle(pen, left, bottom, left + stroke, top)
+        rounded_ring(pen, (left, middle - 12, right, top, 118), (left + stroke, middle + 46, right - 70, top - 58, 62))
+        rounded_ring(pen, (left, bottom, right, middle + 18, 126), (left + stroke, bottom + 58, right - 70, middle - 40, 66))
     elif letter == "D":
-        vertical(left); horizontal(bottom); horizontal(top - stroke); vertical(right - stroke)
+        rounded_ring(pen, (left, bottom, right, top, 190), (left + stroke, bottom + 58, right - 66, top - 58, 132))
+        rectangle(pen, left, bottom, left + stroke, top)
     elif letter == "E":
         vertical(left); horizontal(bottom); horizontal(middle); horizontal(top - stroke)
     elif letter == "N":
         vertical(left); vertical(right - stroke)
         polygon(pen, [(left + stroke, top), (left + 2 * stroke, top), (right - stroke, bottom), (right - 2 * stroke, bottom)])
     elif letter == "O":
-        vertical(left); vertical(right - stroke); horizontal(bottom); horizontal(top - stroke)
+        rounded_ring(pen, (left, bottom, right, top, 205), (left + 64, bottom + 62, right - 64, top - 62, 145))
     elif letter == "R":
-        vertical(left); horizontal(middle); horizontal(top - stroke); vertical(right - stroke, middle, top)
-        polygon(pen, [(190, middle), (240, middle), (right, bottom), (right - stroke, bottom)])
+        rectangle(pen, left, bottom, left + stroke, top)
+        rounded_ring(pen, (left, middle - 8, right, top, 122), (left + stroke, middle + 50, right - 68, top - 58, 64))
+        polygon(pen, [(210, middle + 22), (276, middle + 22), (right, bottom), (right - 70, bottom)])
     elif letter == "T":
-        horizontal(top - stroke); rectangle(pen, 188, bottom, 232, top)
+        center = width // 2
+        horizontal(top - stroke); rectangle(pen, center - stroke // 2, bottom, center + stroke // 2, top)
     elif letter == "U":
-        vertical(left); vertical(right - stroke); horizontal(bottom)
+        # One contour creates open stems and a genuinely rounded baseline.
+        outer_bottom = bottom + 180
+        inner_bottom = outer_bottom + 15
+        points = [(left, top), (left, outer_bottom)]
+        for index in range(9):
+            angle = math.radians(180 + 180 * index / 8)
+            points.append((round(width / 2 + (width / 2 - left) * math.cos(angle)), round(outer_bottom + (outer_bottom - bottom) * math.sin(angle))))
+        points.extend([(right, top), (right - stroke, top), (right - stroke, inner_bottom)])
+        for index in range(9):
+            angle = math.radians(360 - 180 * index / 8)
+            points.append((round(width / 2 + (width / 2 - left - stroke) * math.cos(angle)), round(inner_bottom + (outer_bottom - bottom - stroke) * math.sin(angle))))
+        points.append((left + stroke, top))
+        polygon(pen, points)
     elif letter == "V":
-        polygon(pen, [(left, top), (left + stroke, top), (211, bottom), (190, bottom)])
-        polygon(pen, [(right - stroke, top), (right, top), (230, bottom), (209, bottom)])
+        center = width // 2
+        polygon(pen, [(left, top), (left + 66, top), (center + 15, bottom), (center - 38, bottom)])
+        polygon(pen, [(right - 66, top), (right, top), (center + 38, bottom), (center - 15, bottom)])
     else:
         raise ValueError(f"Unsupported menu letter: {letter}")
     return finish_pen(pen, kind)
@@ -312,7 +380,7 @@ def metrics_for(glyph_order: list[str]) -> dict[str, tuple[int, int]]:
     for name in ("one", "two", "three"):
         metrics[name] = (260, 25)
     for letter in MENU_LETTERS:
-        metrics[f"menu_{letter.lower()}"] = (420, 25)
+        metrics[f"menu_{letter.lower()}"] = (MENU_WIDTHS[letter], 25)
     return metrics
 
 
@@ -519,6 +587,12 @@ Compatibilidade adicional
 Os 32 desenhos de cada família também possuem códigos Unicode PUA diretos.
 Consulte MAPA-DE-GLIFOS.txt quando um aplicativo não processar ligaturas OpenType.
 
+ESCALA EM DOCUMENTOS
+- A versão 1.1.4 ampliou os dentes em aproximadamente 19% dentro do corpo da fonte.
+- O tamanho 11 pt agora tem presença visual maior que nas versões anteriores.
+- Para leitura confortável em odontogramas impressos, comece entre 14 e 18 pt.
+- Essa escala está gravada nos arquivos OTF, TTF e WOFF2; não depende do site.
+
 Versão beta: recomenda-se validação anatômica antes de uso clínico definitivo.
 ''', encoding="utf-8")
     map_lines = [
@@ -544,7 +618,7 @@ Versão beta: recomenda-se validação anatômica antes de uso clínico definiti
         for file in sorted(path for path in staging.rglob("*") if path.is_file()):
             # Stable metadata makes two builds from the same sources produce
             # the same public artifact, which simplifies release verification.
-            info = zipfile.ZipInfo(str(file.relative_to(staging)), (2026, 8, 24, 12, 0, 0))
+            info = zipfile.ZipInfo(str(file.relative_to(staging)), (2026, 8, 25, 12, 0, 0))
             info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = 0o100644 << 16
             archive.writestr(info, file.read_bytes())

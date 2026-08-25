@@ -4,7 +4,7 @@ Fonte vetorial para escrever representações dentárias em documentos, apresent
 
 - **Autor e diretor criativo:** Dante Testa
 - **Site:** [www.dantetesta.com.br](https://www.dantetesta.com.br)
-- **Versão atual:** 1.1.3-beta
+- **Versão atual:** 1.1.4-beta
 - **Ano de criação:** 2026
 
 > Projeto em fase beta. A anatomia deve passar por revisão odontológica antes de uso clínico definitivo.
@@ -53,13 +53,21 @@ O desenvolvimento foi assistido por ferramentas de inteligência artificial sob 
 | `M2` / `m2` | Segundo molar | perfil | face oclusal |
 | `M3` / `m3` | Terceiro molar | perfil | face oclusal |
 
-Use `ODONTO ABOVE` para a arcada superior e `ODONTO UNDER` para a inferior. Os nomes foram desenhados dentro da própria fonte para permanecerem legíveis no seletor do Pages; os aliases web continuam sendo `Dental Icons Upper` e `Dental Icons Lower`. A barra vertical separa os lados e ativa as formas contextuais do lado direito:
+Use `ODONTO ABOVE` para a arcada superior e `ODONTO UNDER` para a inferior. Esses nomes usam um pequeno alfabeto sans-serif original, incorporado somente para que a família permaneça legível no seletor do Pages e do Word. Ele não altera os códigos dentários. Os aliases web continuam sendo `Dental Icons Upper` e `Dental Icons Lower`. A barra vertical separa os lados e ativa as formas contextuais do lado direito:
 
 ```text
 M3 M2 M1 P2 P1 C L I | I L C P1 P2 M1 M2 M3
 ```
 
 As ligaturas tipográficas precisam estar habilitadas para que códigos com dois caracteres, como `M1` e `P2`, sejam convertidos em um único dente. O pacote também inclui `MAPA-DE-GLIFOS.txt` com pontos Unicode PUA diretos para softwares que não executam ligaturas OpenType.
+
+### Escala óptica e tamanho em documentos
+
+Na versão 1.1.4, todos os desenhos dentários foram ampliados em aproximadamente **19% dentro do mesmo corpo tipográfico de 1000 unidades por em**. A escala interna passou de 4,2 para 5,0 unidades tipográficas por unidade lógica do vetor. O avanço continua em 520 unidades, portanto os dentes ocupam melhor a largura disponível sem aumentar artificialmente o espaçamento entre posições.
+
+Os contornos permanecem dentro da janela vertical segura de `-200` a `800`, evitando cortes no Pages, Word e exportadores de PDF. Assim, **11 pt agora produz um símbolo substancialmente maior** que nas versões anteriores. Para odontogramas que precisam de leitura confortável em impressão, recomenda-se começar entre 14 e 18 pt, assim como acontece com outros símbolos monoline.
+
+Essa mudança é geométrica: não depende de CSS, zoom do aplicativo ou substituição de fonte. Ela está gravada nos arquivos OTF, TTF e WOFF2.
 
 No simulador da landing page, o controle **Caixa / vista** oferece três leituras:
 

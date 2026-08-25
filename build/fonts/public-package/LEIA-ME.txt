@@ -1,4 +1,4 @@
-DENTAL ICONS FONT — 1.1.3-beta
+DENTAL ICONS FONT — 1.1.4-beta
 Autor: Dante Testa
 Site: https://www.dantetesta.com.br
 
@@ -39,5 +39,11 @@ Web
 Compatibilidade adicional
 Os 32 desenhos de cada família também possuem códigos Unicode PUA diretos.
 Consulte MAPA-DE-GLIFOS.txt quando um aplicativo não processar ligaturas OpenType.
+
+ESCALA EM DOCUMENTOS
+- A versão 1.1.4 ampliou os dentes em aproximadamente 19% dentro do corpo da fonte.
+- O tamanho 11 pt agora tem presença visual maior que nas versões anteriores.
+- Para leitura confortável em odontogramas impressos, comece entre 14 e 18 pt.
+- Essa escala está gravada nos arquivos OTF, TTF e WOFF2; não depende do site.
 
 Versão beta: recomenda-se validação anatômica antes de uso clínico definitivo.
