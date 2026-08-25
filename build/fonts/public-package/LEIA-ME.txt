@@ -1,4 +1,4 @@
-DENTAL ICONS FONT — 1.0.2-beta
+DENTAL ICONS FONT — 1.1.0-beta
 Autor: Dante Testa
 Site: https://www.dantetesta.com.br
 
@@ -9,14 +9,35 @@ Maiúsculas: dentes em perfil. Minúsculas: vista oclusal.
 Códigos: I, L, C, P1, P2, M1, M2, M3.
 Exemplo: M3 M2 M1 P2 P1 C L I | I L C P1 P2 M1 M2 M3
 
-Instalação no macOS / Pages:
-1. Abra os dois arquivos OTF no Catálogo de Fontes.
-2. Se já existir uma versão, escolha Substituir (não Manter Ambos).
-3. Encerre completamente o Pages com Command-Q e abra novamente.
-4. No Pages, procure Dental Icons Upper ou Dental Icons Lower.
-5. Se M1/P2 não virar um dente, use Formatar > Fonte > Ligadura > Usar Padrão ou Usar Tudo.
+QUAL PASTA USAR
+- macOS: instale somente os dois arquivos OTF da pasta macOS.
+- Windows e Linux: instale somente os dois arquivos TTF da pasta Windows-Linux.
+- Sites e sistemas web: publique o conteúdo da pasta Web.
+- Não instale OTF e TTF simultaneamente no mesmo computador.
 
-No Windows: abra os dois arquivos TTF, selecione Instalar e reinicie o Office.
-Web: envie os arquivos WOFF2 e dental-icons.css para o mesmo diretório.
+macOS / Pages / Keynote / Office para Mac
+1. Encerre os editores com Command-Q.
+2. Abra os dois OTF no Catálogo de Fontes.
+3. Se houver uma versão anterior, remova-a e instale a nova; não mantenha duplicadas.
+4. Reabra o editor e escolha Dental Icons Upper ou Dental Icons Lower.
+5. Para M1/P2, habilite ligaturas padrão ou todas as ligaturas.
+
+Windows / Microsoft Office
+1. Extraia o ZIP, selecione os dois TTF e use Instalar para todos os usuários.
+2. Feche e reabra Word, PowerPoint ou o aplicativo de destino.
+3. Mantenha ligaturas padrão habilitadas.
+
+Linux / LibreOffice / OpenOffice
+1. Instale os dois TTF pelo gerenciador de fontes da distribuição.
+2. Atualize o cache de fontes e reinicie o editor.
+3. No LibreOffice, confira as funcionalidades OpenType se os códigos compostos não forem ligados.
+
+Web
+1. Mantenha os WOFF2 e dental-icons.css no mesmo diretório.
+2. Use as classes dental-icons-upper e dental-icons-lower.
+
+Compatibilidade adicional
+Os 32 desenhos de cada família também possuem códigos Unicode PUA diretos.
+Consulte MAPA-DE-GLIFOS.txt quando um aplicativo não processar ligaturas OpenType.
 
 Versão beta: recomenda-se validação anatômica antes de uso clínico definitivo.

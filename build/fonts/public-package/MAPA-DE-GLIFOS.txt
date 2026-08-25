@@ -1,0 +1,41 @@
+DENTAL ICONS FONT — MAPA UNICODE PUA
+Autor: Dante Testa
+
+Use estes códigos como alternativa em aplicativos sem ligaturas OpenType.
+O mesmo mapa vale para as famílias Upper e Lower.
+
+PERFIL (maiúsculas)
+U+E000  posição 01  M3  lado esquerdo
+U+E001  posição 02  M2  lado esquerdo
+U+E002  posição 03  M1  lado esquerdo
+U+E003  posição 04  P2  lado esquerdo
+U+E004  posição 05  P1  lado esquerdo
+U+E005  posição 06  C   lado esquerdo
+U+E006  posição 07  L   lado esquerdo
+U+E007  posição 08  I   lado esquerdo
+U+E008  posição 09  I   lado direito
+U+E009  posição 10  L   lado direito
+U+E00A  posição 11  C   lado direito
+U+E00B  posição 12  P1  lado direito
+U+E00C  posição 13  P2  lado direito
+U+E00D  posição 14  M1  lado direito
+U+E00E  posição 15  M2  lado direito
+U+E00F  posição 16  M3  lado direito
+
+OCLUSAL (minúsculas)
+U+E010  posição 01  m3  lado esquerdo
+U+E011  posição 02  m2  lado esquerdo
+U+E012  posição 03  m1  lado esquerdo
+U+E013  posição 04  p2  lado esquerdo
+U+E014  posição 05  p1  lado esquerdo
+U+E015  posição 06  c   lado esquerdo
+U+E016  posição 07  l   lado esquerdo
+U+E017  posição 08  i   lado esquerdo
+U+E018  posição 09  i   lado direito
+U+E019  posição 10  l   lado direito
+U+E01A  posição 11  c   lado direito
+U+E01B  posição 12  p1  lado direito
+U+E01C  posição 13  p2  lado direito
+U+E01D  posição 14  m1  lado direito
+U+E01E  posição 15  m2  lado direito
+U+E01F  posição 16  m3  lado direito

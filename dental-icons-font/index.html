@@ -151,23 +151,31 @@
       <div class="install-side"><p class="kicker"><span></span> Instalação guiada</p><h2 id="install-title">Baixou.<br>Instalou.<br>Digitou.</h2><p>Escolha seu ambiente para ver o passo a passo.</p></div>
       <div class="install-interface">
         <div class="install-tabs" role="tablist" aria-label="Plataforma"><button id="tab-windows" type="button" role="tab" aria-selected="true" data-tab="windows">Windows</button><button id="tab-apple" type="button" role="tab" aria-selected="false" data-tab="apple">Apple</button><button id="tab-open" type="button" role="tab" aria-selected="false" data-tab="open">Libre / OpenOffice</button><button id="tab-web" type="button" role="tab" aria-selected="false" data-tab="web">Webfont</button></div>
-        <div class="install-panel" id="panel-windows" role="tabpanel"><ol><li><i>1</i><div><b>Extraia o pacote</b><span>Localize DentalIcons.ttf ou DentalIcons.otf.</span></div></li><li><i>2</i><div><b>Instale a fonte</b><span>Dê dois cliques e selecione “Instalar”.</span></div></li><li><i>3</i><div><b>Reabra seu aplicativo</b><span>Selecione Dental Icons no Word ou PowerPoint.</span></div></li></ol></div>
+        <div class="install-panel" id="panel-windows" role="tabpanel"><ol><li><i>1</i><div><b>Abra Windows-Linux</b><span>Use somente os dois arquivos TTF dessa pasta.</span></div></li><li><i>2</i><div><b>Instale as duas famílias</b><span>Selecione “Instalar para todos os usuários” quando disponível.</span></div></li><li><i>3</i><div><b>Reabra seu aplicativo</b><span>Selecione Dental Icons Upper ou Lower no Word ou PowerPoint.</span></div></li></ol></div>
         <div class="install-panel" id="panel-apple" role="tabpanel" hidden><ol><li><i>1</i><div><b>Instale os dois arquivos OTF</b><span>Upper para a arcada superior e Lower para a inferior. Se já existirem, escolha “Substituir”.</span></div></li><li><i>2</i><div><b>Encerre e reabra o Pages</b><span>Use Command-Q para o aplicativo atualizar a lista de fontes.</span></div></li><li><i>3</i><div><b>Ative as ligaturas</b><span>Use Formatar › Fonte › Ligadura › Usar Padrão ou Usar Tudo.</span></div></li></ol></div>
         <div class="install-panel" id="panel-open" role="tabpanel" hidden><ol><li><i>1</i><div><b>Instale no sistema</b><span>Use o gerenciador de fontes do seu computador.</span></div></li><li><i>2</i><div><b>Reinicie a suíte</b><span>Feche também o Quickstarter, se estiver ativo.</span></div></li><li><i>3</i><div><b>Selecione Dental Icons</b><span>A fonte aparecerá junto às demais famílias.</span></div></li></ol></div>
         <div class="install-panel code-panel" id="panel-web" role="tabpanel" hidden><div><span>styles.css</span><button id="copy-code" type="button">Copiar</button></div><pre><code id="webfont-code">@font-face {
   font-family: "Dental Icons Upper";
   src: url("DentalIconsUpper-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
   font-display: swap;
 }
 
 @font-face {
   font-family: "Dental Icons Lower";
   src: url("DentalIconsLower-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
   font-display: swap;
 }
 
 .arcada-superior { font-family: "Dental Icons Upper"; }
-.arcada-inferior { font-family: "Dental Icons Lower"; }</code></pre></div>
+.arcada-inferior { font-family: "Dental Icons Lower"; }
+.arcada-superior, .arcada-inferior {
+  font-synthesis: none;
+  font-feature-settings: "ccmp" 1, "liga" 1, "calt" 1, "kern" 1;
+}</code></pre></div>
       </div>
     </section>
 

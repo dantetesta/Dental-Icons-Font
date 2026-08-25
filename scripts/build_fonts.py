@@ -18,20 +18,25 @@ from fontTools.pens.t2CharStringPen import T2CharStringPen
 from fontTools.pens.transformPen import TransformPen
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 from fontTools.svgLib.path import parse_path
-from fontTools.ttLib import TTFont
+from fontTools.ttLib import TTFont, newTable
+from fontTools.ttLib.tables.O_S_2f_2 import Panose
+from fontTools.ttLib.tables.ttProgram import Program
 
 
 ROOT = Path(__file__).resolve().parents[1]
 VECTORS = ROOT / "assets" / "reference-vectors"
 BUILD = ROOT / "build" / "fonts"
 PUBLIC_DOWNLOADS = ROOT / "dental-icons-font" / "downloads"
-VERSION = "1.0.2-beta"
-FONT_REVISION = 1.002
+VERSION = "1.1.0-beta"
+FONT_REVISION = 1.100
 UPM = 1000
 PROFILE_HEIGHT = 194
 OCCLUSAL_HEIGHT = 112
 LOGICAL_TO_FONT = 4.2
 ADVANCE = 520
+VERTICAL_SHIFT = -140
+FONT_TIMESTAMP = 3870417600  # 2026-08-24 12:00 UTC in the OpenType epoch.
+PUA_START = 0xE000
 LEFT_CODES = ["M3", "M2", "M1", "P2", "P1", "C", "L", "I"]
 RIGHT_CODES = ["I", "L", "C", "P1", "P2", "M1", "M2", "M3"]
 
@@ -83,7 +88,7 @@ def outline_for(source: Path, temporary: Path, kind: str):
     # the logical SVG. This transform restores the logical geometry, flips it
     # to the font coordinate system, and scales it into the em square.
     scale = LOGICAL_TO_FONT / 100
-    transform = (scale, 0, 0, -scale, 25, logical_height * LOGICAL_TO_FONT)
+    transform = (scale, 0, 0, -scale, 25, logical_height * LOGICAL_TO_FONT + VERTICAL_SHIFT)
     if kind == "ttf":
         base = TTGlyphPen(None)
         pen = TransformPen(Cu2QuPen(base, max_err=1.0, reverse_direction=True), transform)
@@ -100,50 +105,132 @@ def empty_outline(kind: str, width: int = ADVANCE):
     return T2CharStringPen(width, None).getCharString()
 
 
-def bar_outline(kind: str):
-    if kind == "ttf":
-        pen = TTGlyphPen(None)
-    else:
-        pen = T2CharStringPen(180, None)
-    pen.moveTo((82, 120)); pen.lineTo((98, 120)); pen.lineTo((98, 760)); pen.lineTo((82, 760)); pen.closePath()
+def drawing_pen(kind: str, width: int):
+    return TTGlyphPen(None) if kind == "ttf" else T2CharStringPen(width, None)
+
+
+def finish_pen(pen, kind: str):
     return pen.glyph() if kind == "ttf" else pen.getCharString()
 
 
+def rectangle(pen, x_min: int, y_min: int, x_max: int, y_max: int) -> None:
+    pen.moveTo((x_min, y_min)); pen.lineTo((x_max, y_min)); pen.lineTo((x_max, y_max)); pen.lineTo((x_min, y_max)); pen.closePath()
+
+
+def polygon(pen, points: list[tuple[int, int]]) -> None:
+    pen.moveTo(points[0])
+    for point in points[1:]:
+        pen.lineTo(point)
+    pen.closePath()
+
+
+def notdef_outline(kind: str):
+    pen = drawing_pen(kind, ADVANCE)
+    rectangle(pen, 55, -110, 465, 690)
+    # Counter direction is reversed so the center remains transparent.
+    pen.moveTo((115, -50)); pen.lineTo((115, 630)); pen.lineTo((405, 630)); pen.lineTo((405, -50)); pen.closePath()
+    return finish_pen(pen, kind)
+
+
+def fallback_letter_outline(kind: str, letter: str):
+    lowercase = letter.islower(); symbol = letter.upper(); width = 400; pen = drawing_pen(kind, width)
+    bottom, top, stroke = ((-50, 500, 34) if lowercase else (-60, 650, 40))
+    left, right, middle = 45, 355, 200
+    rectangle(pen, left, bottom, left + stroke, top)
+    if symbol == "M":
+        rectangle(pen, right - stroke, bottom, right, top)
+        polygon(pen, [(left + stroke, top), (left + 2 * stroke, top), (middle, 255), (middle - 16, 255)])
+        polygon(pen, [(right - 2 * stroke, top), (right - stroke, top), (middle + 16, 255), (middle, 255)])
+    else:
+        rectangle(pen, left, top - stroke, right - 35, top)
+        rectangle(pen, right - 35 - stroke, 270, right - 35, top)
+        rectangle(pen, left, 270, right - 35, 270 + stroke)
+    return finish_pen(pen, kind)
+
+
+def fallback_digit_outline(kind: str, digit: str):
+    width = 260; pen = drawing_pen(kind, width); stroke = 34
+    segments = {
+        "a": (45, 616, 215, 650), "b": (181, 350, 215, 650),
+        "c": (181, -60, 215, 250), "d": (45, -60, 215, -26),
+        "e": (45, -60, 79, 250), "f": (45, 350, 79, 650),
+        "g": (45, 278, 215, 312),
+    }
+    enabled = {"1": "bc", "2": "abged", "3": "abgcd"}[digit]
+    for segment in enabled:
+        rectangle(pen, *segments[segment])
+    return finish_pen(pen, kind)
+
+
+def bar_outline(kind: str):
+    pen = drawing_pen(kind, 180)
+    rectangle(pen, 82, -80, 98, 660)
+    return finish_pen(pen, kind)
+
+
+def tooth_glyphs(codes: tuple[str, ...] | list[str] = tuple(LEFT_CODES)) -> list[str]:
+    return [glyph_name(view, code, side) for view in ("profile", "occlusal") for side in ("l", "r") for code in codes]
+
+
 def feature_code() -> str:
-    rules = ["feature liga {"]
+    ligature_rules: list[str] = []
     for code in ("M1", "M2", "M3"):
         digit = {"1": "one", "2": "two", "3": "three"}[code[1]]
-        rules.append(f"  sub Mbase {digit} by {glyph_name('profile', code, 'l')};")
-        rules.append(f"  sub mbase {digit} by {glyph_name('occlusal', code, 'l')};")
+        ligature_rules.append(f"  sub Mbase {digit} by {glyph_name('profile', code, 'l')};")
+        ligature_rules.append(f"  sub mbase {digit} by {glyph_name('occlusal', code, 'l')};")
     for code in ("P1", "P2"):
         digit = {"1": "one", "2": "two"}[code[1]]
-        rules.append(f"  sub Pbase {digit} by {glyph_name('profile', code, 'l')};")
-        rules.append(f"  sub pbase {digit} by {glyph_name('occlusal', code, 'l')};")
-    rules.append("} liga;")
+        ligature_rules.append(f"  sub Pbase {digit} by {glyph_name('profile', code, 'l')};")
+        ligature_rules.append(f"  sub pbase {digit} by {glyph_name('occlusal', code, 'l')};")
 
-    rules.append("feature calt {")
+    lookup_rules: list[str] = []
+    lookup_names: list[str] = []
     for view in ("profile", "occlusal"):
         prefix = ["bar", "space"]
         for index, code in enumerate(RIGHT_CODES, 1):
             source = glyph_name(view, code, "l")
             target = glyph_name(view, code, "r")
-            rules.extend([
-                f"lookup {view}Right{index} {{",
+            lookup_name = f"{view}Right{index}"
+            lookup_names.append(lookup_name)
+            lookup_rules.extend([
+                f"lookup {lookup_name} {{",
                 f"  sub {' '.join(prefix)} {source}' by {target};",
-                f"}} {view}Right{index};",
+                f"}} {lookup_name};",
             ])
             prefix.extend([target, "space"])
-    rules.append("} calt;")
+
+    all_teeth = tooth_glyphs()
+    ligatures = tooth_glyphs(("M1", "M2", "M3", "P1", "P2"))
+    bases = [glyph for glyph in all_teeth if glyph not in ligatures]
+    rules = [
+        "table GDEF {",
+        f"GlyphClassDef [{' '.join(bases)} bar Mbase Pbase mbase pbase one two three], [{' '.join(ligatures)}], [], [];",
+        *[f"LigatureCaretByPos {glyph} 260;" for glyph in ligatures],
+        "} GDEF;",
+        # Compile composed codes before the contextual side alternates. ccmp is
+        # processed early by shaping engines; liga keeps the familiar fallback
+        # for applications that expose only a Ligatures switch.
+        "lookup ComposeTeeth {", *ligature_rules, "} ComposeTeeth;",
+        *lookup_rules,
+        "feature ccmp { lookup ComposeTeeth; } ccmp;",
+        "feature liga { lookup ComposeTeeth;", *[f"  lookup {name};" for name in lookup_names], "} liga;",
+        "feature calt {", *[f"  lookup {name};" for name in lookup_names], "} calt;",
+        "feature kern {",
+        f"  pos [{' '.join(all_teeth)}] space -45;",
+        f"  pos space [{' '.join(all_teeth)}] -45;",
+        "} kern;",
+    ]
     return "\n".join(rules)
 
 
 def collect_outlines(arch: str, kind: str, temporary: Path):
     outlines = {
-        ".notdef": empty_outline(kind), "space": empty_outline(kind, 220),
-        "bar": bar_outline(kind), "Mbase": empty_outline(kind, 0),
-        "Pbase": empty_outline(kind, 0), "mbase": empty_outline(kind, 0),
-        "pbase": empty_outline(kind, 0), "one": empty_outline(kind, 0),
-        "two": empty_outline(kind, 0), "three": empty_outline(kind, 0),
+        ".notdef": notdef_outline(kind), ".null": empty_outline(kind, 0),
+        "nonmarkingreturn": empty_outline(kind, 0), "bar": bar_outline(kind),
+        "Mbase": fallback_letter_outline(kind, "M"),
+        "Pbase": fallback_letter_outline(kind, "P"), "mbase": fallback_letter_outline(kind, "m"),
+        "pbase": fallback_letter_outline(kind, "p"), "one": fallback_digit_outline(kind, "1"),
+        "two": fallback_digit_outline(kind, "2"), "three": fallback_digit_outline(kind, "3"),
     }
     for view in ("profile", "occlusal"):
         for position, code in enumerate(LEFT_CODES, 1):
@@ -154,6 +241,9 @@ def collect_outlines(arch: str, kind: str, temporary: Path):
             outlines[glyph_name(view, code, "r")] = outline_for(
                 source_path(arch, view, position, code), temporary, kind
             )
+    # Keeping a different-width glyph last prevents hmtx compression in CFF
+    # fonts, matching Microsoft's interoperability recommendation.
+    outlines["space"] = empty_outline(kind, 220)
     return outlines
 
 
@@ -165,15 +255,19 @@ def font_names(arch: str):
 
 def metrics_for(glyph_order: list[str]) -> dict[str, tuple[int, int]]:
     metrics = {name: (ADVANCE, 25) for name in glyph_order}
+    metrics[".null"] = (0, 0); metrics["nonmarkingreturn"] = (0, 0)
     metrics["space"] = (220, 0); metrics["bar"] = (180, 0)
-    for name in ("Mbase", "Pbase", "mbase", "pbase", "one", "two", "three"):
-        metrics[name] = (0, 0)
+    for name in ("Mbase", "Pbase", "mbase", "pbase"):
+        metrics[name] = (400, 25)
+    for name in ("one", "two", "three"):
+        metrics[name] = (260, 25)
     return metrics
 
 
 def character_map() -> dict[int, str]:
-    return {
-        32: "space", 124: "bar", ord("M"): "Mbase", ord("P"): "Pbase",
+    mapping = {
+        0: ".null", 13: "nonmarkingreturn", 32: "space", 160: "space", 124: "bar",
+        ord("M"): "Mbase", ord("P"): "Pbase",
         ord("m"): "mbase", ord("p"): "pbase", ord("1"): "one",
         ord("2"): "two", ord("3"): "three",
         ord("I"): glyph_name("profile", "I", "l"),
@@ -183,13 +277,19 @@ def character_map() -> dict[int, str]:
         ord("l"): glyph_name("occlusal", "L", "l"),
         ord("c"): glyph_name("occlusal", "C", "l"),
     }
+    for view_index, view in enumerate(("profile", "occlusal")):
+        for position, code in enumerate(LEFT_CODES):
+            mapping[PUA_START + view_index * 16 + position] = glyph_name(view, code, "l")
+        for position, code in enumerate(RIGHT_CODES, 8):
+            mapping[PUA_START + view_index * 16 + position] = glyph_name(view, code, "r")
+    return mapping
 
 
 def setup_common(builder: FontBuilder, family: str, postscript: str, glyph_order: list[str], metrics):
     builder.setupGlyphOrder(glyph_order)
     builder.setupCharacterMap(character_map())
     builder.setupHorizontalMetrics(metrics)
-    builder.setupHorizontalHeader(ascent=860, descent=-140)
+    builder.setupHorizontalHeader(ascent=800, descent=-200, lineGap=0, caretSlopeRise=1, caretSlopeRun=0)
     builder.setupNameTable({
         "familyName": family, "styleName": "Regular", "uniqueFontIdentifier": f"DanteTesta:{postscript}:{VERSION}",
         "fullName": family, "psName": postscript, "version": f"Version {FONT_REVISION:.3f}; Dental Icons {VERSION}",
@@ -199,9 +299,22 @@ def setup_common(builder: FontBuilder, family: str, postscript: str, glyph_order
         "licenseDescription": "Software proprietário. Uso sujeito à autorização de Dante Testa.",
         "licenseInfoURL": "https://www.dantetesta.com.br",
         "description": "Fonte vetorial original para representação tipográfica de dentes e odontogramas.",
-    })
-    builder.setupOS2(sTypoAscender=860, sTypoDescender=-140, usWinAscent=860, usWinDescent=140)
-    builder.setupPost()
+        "typographicFamily": family, "typographicSubfamily": "Regular",
+        "sampleText": "M3 M2 M1 P2 P1 C L I | I L C P1 P2 M1 M2 M3",
+    }, windows=True, mac=False)
+    panose = Panose(); panose.bFamilyType = 5
+    builder.setupOS2(
+        version=4, xAvgCharWidth=475, usWeightClass=400, usWidthClass=5, fsType=0,
+        ySubscriptXSize=650, ySubscriptYSize=600, ySubscriptXOffset=0, ySubscriptYOffset=75,
+        ySuperscriptXSize=650, ySuperscriptYSize=600, ySuperscriptXOffset=0, ySuperscriptYOffset=350,
+        yStrikeoutSize=50, yStrikeoutPosition=300, sFamilyClass=0, panose=panose,
+        ulCodePageRange1=1, ulCodePageRange2=0, achVendID="Dtst",
+        fsSelection=(1 << 6) | (1 << 7) | (1 << 8),
+        sTypoAscender=800, sTypoDescender=-200, sTypoLineGap=0,
+        usWinAscent=800, usWinDescent=200, sxHeight=500, sCapHeight=650,
+        usDefaultChar=0, usBreakChar=32, usMaxContext=17,
+    )
+    builder.setupPost(keepGlyphNames=True, italicAngle=0, underlinePosition=-100, underlineThickness=50, isFixedPitch=0)
 
 
 def build_font(arch: str, kind: str, temporary: Path) -> Path:
@@ -214,13 +327,28 @@ def build_font(arch: str, kind: str, temporary: Path) -> Path:
         builder.setupGlyf(outlines)
         setup_common(builder, family, postscript, glyph_order, metrics)
         builder.setupMaxp()
+        gasp = newTable("gasp"); gasp.gaspRange = {65535: 0x000A}; builder.font["gasp"] = gasp
+        # Tell legacy TrueType rasterizers to use compatible smart dropout
+        # control. Modern grayscale and subpixel rasterizers ignore these
+        # instructions, while Font Book, older Windows stacks and printers can
+        # still use them at small sizes.
+        prep = newTable("prep"); prep.program = Program()
+        prep.program.fromBytecode(bytes((0xB8, 0x01, 0xFF, 0x85, 0xB0, 0x04, 0x8D)))
+        builder.font["prep"] = prep
     else:
         setup_common(builder, family, postscript, glyph_order, metrics)
         builder.setupCFF(postscript, {
             "FullName": family, "FamilyName": family, "Weight": "Regular", "version": f"{FONT_REVISION:.3f}",
+            "Notice": "Copyright 2026 Dante Testa. All rights reserved.",
+            "Copyright": "Copyright 2026 Dante Testa. All rights reserved.",
+            "ItalicAngle": 0, "isFixedPitch": False, "UnderlinePosition": -100, "UnderlineThickness": 50,
         }, outlines, {})
     addOpenTypeFeaturesFromString(builder.font, feature_code())
     builder.font["head"].fontRevision = FONT_REVISION
+    builder.font["head"].created = FONT_TIMESTAMP; builder.font["head"].modified = FONT_TIMESTAMP
+    builder.font["head"].lowestRecPPEM = 6
+    if kind == "otf":
+        builder.font["hhea"].numberOfHMetrics = len(glyph_order)
     output = BUILD / f"{postscript}.{kind}"
     builder.save(output)
     return output
@@ -242,20 +370,35 @@ def package(files: list[Path]) -> Path:
     if staging.exists():
         shutil.rmtree(staging)
     staging.mkdir(parents=True)
+    macos = staging / "macOS"; windows_linux = staging / "Windows-Linux"; web = staging / "Web"
+    macos.mkdir(); windows_linux.mkdir(); web.mkdir()
     for file in files:
-        shutil.copy2(file, staging / file.name)
-    (staging / "dental-icons.css").write_text('''@font-face {
+        destination = macos if file.suffix == ".otf" else windows_linux if file.suffix == ".ttf" else web
+        shutil.copy2(file, destination / file.name)
+    (web / "dental-icons.css").write_text('''@font-face {
   font-family: "Dental Icons Upper";
   src: url("DentalIconsUpper-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Dental Icons Lower";
   src: url("DentalIconsLower-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
   font-display: swap;
 }
-.dental-icons-upper { font-family: "Dental Icons Upper"; font-variant-ligatures: common-ligatures contextual; }
-.dental-icons-lower { font-family: "Dental Icons Lower"; font-variant-ligatures: common-ligatures contextual; }
+.dental-icons-upper,
+.dental-icons-lower {
+  font-style: normal;
+  font-weight: 400;
+  font-synthesis: none;
+  font-variant-ligatures: common-ligatures contextual;
+  font-feature-settings: "ccmp" 1, "liga" 1, "calt" 1, "kern" 1;
+}
+.dental-icons-upper { font-family: "Dental Icons Upper"; }
+.dental-icons-lower { font-family: "Dental Icons Lower"; }
 ''', encoding="utf-8")
     (staging / "LEIA-ME.txt").write_text(f'''DENTAL ICONS FONT — {VERSION}
 Autor: Dante Testa
@@ -268,23 +411,66 @@ Maiúsculas: dentes em perfil. Minúsculas: vista oclusal.
 Códigos: I, L, C, P1, P2, M1, M2, M3.
 Exemplo: M3 M2 M1 P2 P1 C L I | I L C P1 P2 M1 M2 M3
 
-Instalação no macOS / Pages:
-1. Abra os dois arquivos OTF no Catálogo de Fontes.
-2. Se já existir uma versão, escolha Substituir (não Manter Ambos).
-3. Encerre completamente o Pages com Command-Q e abra novamente.
-4. No Pages, procure Dental Icons Upper ou Dental Icons Lower.
-5. Se M1/P2 não virar um dente, use Formatar > Fonte > Ligadura > Usar Padrão ou Usar Tudo.
+QUAL PASTA USAR
+- macOS: instale somente os dois arquivos OTF da pasta macOS.
+- Windows e Linux: instale somente os dois arquivos TTF da pasta Windows-Linux.
+- Sites e sistemas web: publique o conteúdo da pasta Web.
+- Não instale OTF e TTF simultaneamente no mesmo computador.
 
-No Windows: abra os dois arquivos TTF, selecione Instalar e reinicie o Office.
-Web: envie os arquivos WOFF2 e dental-icons.css para o mesmo diretório.
+macOS / Pages / Keynote / Office para Mac
+1. Encerre os editores com Command-Q.
+2. Abra os dois OTF no Catálogo de Fontes.
+3. Se houver uma versão anterior, remova-a e instale a nova; não mantenha duplicadas.
+4. Reabra o editor e escolha Dental Icons Upper ou Dental Icons Lower.
+5. Para M1/P2, habilite ligaturas padrão ou todas as ligaturas.
+
+Windows / Microsoft Office
+1. Extraia o ZIP, selecione os dois TTF e use Instalar para todos os usuários.
+2. Feche e reabra Word, PowerPoint ou o aplicativo de destino.
+3. Mantenha ligaturas padrão habilitadas.
+
+Linux / LibreOffice / OpenOffice
+1. Instale os dois TTF pelo gerenciador de fontes da distribuição.
+2. Atualize o cache de fontes e reinicie o editor.
+3. No LibreOffice, confira as funcionalidades OpenType se os códigos compostos não forem ligados.
+
+Web
+1. Mantenha os WOFF2 e dental-icons.css no mesmo diretório.
+2. Use as classes dental-icons-upper e dental-icons-lower.
+
+Compatibilidade adicional
+Os 32 desenhos de cada família também possuem códigos Unicode PUA diretos.
+Consulte MAPA-DE-GLIFOS.txt quando um aplicativo não processar ligaturas OpenType.
 
 Versão beta: recomenda-se validação anatômica antes de uso clínico definitivo.
 ''', encoding="utf-8")
+    map_lines = [
+        "DENTAL ICONS FONT — MAPA UNICODE PUA",
+        "Autor: Dante Testa",
+        "",
+        "Use estes códigos como alternativa em aplicativos sem ligaturas OpenType.",
+        "O mesmo mapa vale para as famílias Upper e Lower.",
+        "",
+    ]
+    for view_index, view in enumerate(("PERFIL (maiúsculas)", "OCLUSAL (minúsculas)")):
+        map_lines.append(view)
+        for position, code in enumerate(LEFT_CODES + RIGHT_CODES):
+            unicode_value = PUA_START + view_index * 16 + position
+            side = "esquerdo" if position < 8 else "direito"
+            map_lines.append(f"U+{unicode_value:04X}  posição {position + 1:02d}  {code.lower() if view_index else code:<2}  lado {side}")
+        map_lines.append("")
+    (staging / "MAPA-DE-GLIFOS.txt").write_text("\n".join(map_lines), encoding="utf-8")
+    shutil.copy2(ROOT / "LICENSE", staging / "LICENCA.txt")
     PUBLIC_DOWNLOADS.mkdir(parents=True, exist_ok=True)
     zip_path = PUBLIC_DOWNLOADS / "dental-icons-font.zip"
     with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
-        for file in sorted(staging.iterdir()):
-            archive.write(file, file.name)
+        for file in sorted(path for path in staging.rglob("*") if path.is_file()):
+            # Stable metadata makes two builds from the same sources produce
+            # the same public artifact, which simplifies release verification.
+            info = zipfile.ZipInfo(str(file.relative_to(staging)), (2026, 8, 24, 12, 0, 0))
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.external_attr = 0o100644 << 16
+            archive.writestr(info, file.read_bytes())
     return zip_path
 
 
