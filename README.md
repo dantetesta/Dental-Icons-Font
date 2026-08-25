@@ -4,7 +4,7 @@ Fonte vetorial para escrever representações dentárias em documentos, apresent
 
 - **Autor e diretor criativo:** Dante Testa
 - **Site:** [www.dantetesta.com.br](https://www.dantetesta.com.br)
-- **Versão atual:** 1.0.1-beta
+- **Versão atual:** 1.0.2-beta
 - **Ano de criação:** 2026
 
 > Projeto em fase beta. A anatomia deve passar por revisão odontológica antes de uso clínico definitivo.
@@ -58,6 +58,12 @@ M3 M2 M1 P2 P1 C L I | I L C P1 P2 M1 M2 M3
 ```
 
 As ligaturas tipográficas precisam estar habilitadas para que códigos com dois caracteres, como `M1` e `P2`, sejam convertidos em um único dente.
+
+No simulador da landing page, o controle **Caixa / vista** oferece três leituras:
+
+- `A/a · Digitado`: respeita a caixa de cada código e permite misturar `m1 M1`;
+- `A · Perfil`: converte a sequência inteira para maiúsculas e mostra os dentes em perfil;
+- `a · Oclusal`: converte a sequência inteira para minúsculas e mostra as faces oclusais.
 
 ## Instalação
 

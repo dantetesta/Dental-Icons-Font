@@ -59,3 +59,7 @@
 /* A sequência pode misturar caixa: maiúscula = perfil, minúscula = oclusal. */
 .sim-glyph.is-occlusal .glyph-art{width:calc(var(--glyph-size) * .74);height:var(--glyph-size)}
 @media(max-width:760px){.hero-copy{min-width:0}.hero-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%}.hero-stats div{min-width:0;padding:0 8px}.hero-stats dt{font-size:25px}.hero-stats dd{font-size:9px}}
+
+/* Caixa e vista são a mesma decisão tipográfica, apresentada sem ambiguidade. */
+.reading-controls{display:grid;grid-template-columns:.78fr 1.22fr;gap:12px;align-items:end}.reading-controls small{display:block;margin-bottom:8px;font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:#70817e}.case-segment button{display:grid;place-items:center;gap:2px;padding:6px 2px;line-height:1}.case-segment button b{font:800 11px ui-monospace,monospace}.case-segment button span{font-size:7px;letter-spacing:.01em}.case-segment button.active b{color:#fff}.case-segment button.active span{color:rgba(255,255,255,.8)}
+@media(max-width:420px){.reading-controls{grid-template-columns:1fr}.case-segment button{padding:8px 4px}.case-segment button span{font-size:8px}}
