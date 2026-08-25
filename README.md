@@ -1,49 +1,70 @@
-# Dental Icons Font
+<p align="center">
+  <img src="dental-icons-font/assets/glyphs/upper-profile-01-m3.svg" height="104" alt="Terceiro molar superior em perfil">
+  <img src="dental-icons-font/assets/glyphs/upper-profile-03-m1.svg" height="104" alt="Primeiro molar superior em perfil">
+  <img src="dental-icons-font/assets/glyphs/upper-profile-05-p1.svg" height="104" alt="Primeiro pré-molar superior em perfil">
+  <img src="dental-icons-font/assets/glyphs/upper-profile-06-c.svg" height="104" alt="Canino superior em perfil">
+  <img src="dental-icons-font/assets/glyphs/upper-profile-07-l.svg" height="104" alt="Incisivo lateral superior em perfil">
+  <img src="dental-icons-font/assets/glyphs/upper-profile-08-i.svg" height="104" alt="Incisivo central superior em perfil">
+</p>
 
-Fonte vetorial para escrever representações dentárias em documentos, apresentações, aplicativos e interfaces web. O sistema transforma códigos curtos — `I`, `L`, `C`, `P1`, `P2`, `M1`, `M2` e `M3` — em glifos anatômicos organizados por arcada e vista.
+<h1 align="center">Dental Icons Font</h1>
 
-- **Autor e diretor criativo:** Dante Testa
-- **Site:** [www.dantetesta.com.br](https://www.dantetesta.com.br)
-- **Versão atual:** 1.1.5-beta
-- **Ano de criação:** 2026
+<p align="center">
+  <strong>Digite odontogramas como quem digita texto.</strong><br>
+  Uma fonte vetorial original criada para dentistas, documentos clínicos, apresentações e sistemas web.
+</p>
 
-> Projeto em fase beta. A anatomia deve passar por revisão odontológica antes de uso clínico definitivo.
+<p align="center">
+  <code>1.1.5-beta</code> · <code>OTF</code> · <code>TTF</code> · <code>WOFF2</code> · <code>OpenType</code> · <code>uso autorizado</code>
+</p>
 
-## O que este repositório contém
+<p align="center">
+  <a href="https://dantetesta.com.br/dental-icons-font/"><strong>Download oficial</strong></a>
+  &nbsp;·&nbsp;
+  <a href="dental-icons-font/index.html">Código da landing page</a>
+  &nbsp;·&nbsp;
+  <a href="https://www.dantetesta.com.br">Dante Testa</a>
+</p>
 
-- 64 referências raster isoladas: 16 posições × 2 arcadas × 2 vistas;
-- 64 SVGs monoline reconstruídos com curvas Bézier;
-- duas famílias tipográficas padronizadas: `Dental Icons Up` e `Dental Icons Down`;
-- arquivos instaláveis TTF e OTF;
-- webfonts WOFF2 e folha CSS;
-- 32 pontos Unicode PUA diretos por família para aplicativos sem ligaturas;
-- scripts reproduzíveis de vetorização, compilação OpenType e empacotamento;
-- validadores de estrutura, shaping, CoreText/macOS, WOFF2 e integridade do ZIP;
-- landing page interativa com simulador, comparação de vistas, download e localização em pt-BR, pt-PT, inglês e espanhol;
-- página técnica simples na raiz para inspeção dos desenhos.
+> [!IMPORTANT]
+> O download oficial deve ser feito em **[dantetesta.com.br/dental-icons-font](https://dantetesta.com.br/dental-icons-font/)**. Esta versão é beta e a anatomia dos glifos deve passar por revisão odontológica antes de uso clínico definitivo.
 
-## Autoria e proveniência
+## Uma linguagem visual para odontologia
 
-Este projeto foi concebido, dirigido e produzido para Dante Testa. Os glifos foram desenvolvidos a partir dos 64 desenhos dentários de referência preservados em [`assets/reference-glyphs`](assets/reference-glyphs), e não a partir de uma fonte comercial, biblioteca de ícones ou pacote vetorial de terceiros.
+Dental Icons transforma códigos curtos em desenhos dentários vetoriais. A mesma sequência pode ser usada no Pages, Word, PowerPoint, LibreOffice, OpenOffice, aplicativos gráficos e interfaces web.
 
-O processo de produção registrado no próprio repositório é:
+```text
+M3 M2 M1 P2 P1 C L I | I L C P1 P2 M1 M2 M3
+```
 
-1. isolamento dos desenhos de referência por posição, arcada e vista;
-2. redução para eixo central e limpeza de componentes espúrios;
-3. reconstrução em caminhos SVG com curvas Catmull–Rom convertidas em Bézier;
-4. normalização de escala, direção anatômica, terminações e junções;
-5. conversão dos caminhos para contornos TrueType e CFF/OpenType;
-6. criação das ligaturas `P1`, `P2`, `M1`, `M2` e `M3` e das alternâncias contextuais de lado;
-7. geração dos artefatos TTF, OTF, WOFF2 e do pacote de instalação.
+| Família | Representação | Onde usar |
+|:--|:--|:--|
+| **Dental Icons Up** | Arcada superior | Pages, Word, OTF, TTF, WOFF2 e CSS |
+| **Dental Icons Down** | Arcada inferior | Pages, Word, OTF, TTF, WOFF2 e CSS |
 
-O histórico Git, os desenhos-fonte, os vetores intermediários e os scripts permitem auditar como os arquivos finais foram produzidos. Dependências de software de código aberto são usadas apenas como ferramentas de processamento e compilação; elas não fornecem os desenhos dos dentes.
+Os nomes são idênticos em todos os ambientes. Não existe mais um nome para desktop e outro para web.
 
-O desenvolvimento foi assistido por ferramentas de inteligência artificial sob direção, seleção e aprovação de Dante Testa. Essa assistência não transfere a autoria do projeto nem introduz, por si só, direitos sobre fontes ou bibliotecas externas.
+## O mesmo dente, duas leituras
 
-## Mapa tipográfico
+<table>
+  <tr>
+    <th align="center">Maiúscula · perfil</th>
+    <th align="center">Minúscula · face oclusal</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="dental-icons-font/assets/glyphs/upper-profile-03-m1.svg" height="150" alt="M1 superior em perfil"><br>
+      <code>M1</code>
+    </td>
+    <td align="center">
+      <img src="dental-icons-font/assets/glyphs/upper-occlusal-03-m1.svg" height="112" alt="m1 superior em face oclusal"><br>
+      <code>m1</code>
+    </td>
+  </tr>
+</table>
 
-| Código | Dente | Maiúscula | Minúscula |
-|---|---|---|---|
+| Código | Elemento dental | Maiúscula | Minúscula |
+|:--:|:--|:--:|:--:|
 | `I` / `i` | Incisivo central | perfil | face oclusal |
 | `L` / `l` | Incisivo lateral | perfil | face oclusal |
 | `C` / `c` | Canino | perfil | face oclusal |
@@ -53,139 +74,185 @@ O desenvolvimento foi assistido por ferramentas de inteligência artificial sob 
 | `M2` / `m2` | Segundo molar | perfil | face oclusal |
 | `M3` / `m3` | Terceiro molar | perfil | face oclusal |
 
-Use `Dental Icons Up` para a arcada superior e `Dental Icons Down` para a inferior. Os mesmos nomes são usados no Pages, Word, OTF, TTF, WOFF2 e CSS. Uma substituição contextual exclusiva recompõe esses nomes como texto legível nos seletores de fontes, sem alterar os códigos dentários `I`, `L`, `C` e `P` durante o uso normal. A barra vertical separa os lados e ativa as formas contextuais do lado direito:
+A barra `|` marca a linha média. As alternâncias contextuais selecionam automaticamente as formas anatômicas do lado direito da arcada.
 
-```text
-M3 M2 M1 P2 P1 C L I | I L C P1 P2 M1 M2 M3
-```
+## Comece em dois minutos
 
-As ligaturas tipográficas precisam estar habilitadas para que códigos com dois caracteres, como `M1` e `P2`, sejam convertidos em um único dente. O pacote também inclui `MAPA-DE-GLIFOS.txt` com pontos Unicode PUA diretos para softwares que não executam ligaturas OpenType.
+### macOS · Pages, Keynote e Office
 
-### Escala óptica e tamanho em documentos
+1. Faça o [download oficial](https://dantetesta.com.br/dental-icons-font/) e extraia o pacote.
+2. Na pasta `macOS`, instale somente `DentalIconsUpper-Regular.otf` e `DentalIconsLower-Regular.otf`.
+3. Remova versões antigas antes da instalação; não mantenha famílias duplicadas.
+4. Encerre o Pages ou Keynote com `Command + Q` e abra novamente.
+5. Escolha **Dental Icons Up** ou **Dental Icons Down**.
+6. Se `M1` ou `P2` não formar um dente, ative **Formatar → Fonte → Ligadura → Usar Padrão** ou **Usar Tudo**.
 
-Na versão 1.1.4, todos os desenhos dentários foram ampliados em aproximadamente **19% dentro do mesmo corpo tipográfico de 1000 unidades por em**. A escala interna passou de 4,2 para 5,0 unidades tipográficas por unidade lógica do vetor. O avanço continua em 520 unidades, portanto os dentes ocupam melhor a largura disponível sem aumentar artificialmente o espaçamento entre posições.
+### Windows · Word, PowerPoint e LibreOffice
 
-Os contornos permanecem dentro da janela vertical segura de `-200` a `800`, evitando cortes no Pages, Word e exportadores de PDF. Assim, **11 pt agora produz um símbolo substancialmente maior** que nas versões anteriores. Para odontogramas que precisam de leitura confortável em impressão, recomenda-se começar entre 14 e 18 pt, assim como acontece com outros símbolos monoline.
+1. Faça o [download oficial](https://dantetesta.com.br/dental-icons-font/) e abra a pasta `Windows-Linux`.
+2. Instale os dois arquivos TTF; no Windows, escolha **Instalar para todos os usuários** quando disponível.
+3. Feche e reabra o editor.
+4. Selecione **Dental Icons Up** ou **Dental Icons Down** e mantenha as ligaturas OpenType habilitadas.
 
-Essa mudança é geométrica: não depende de CSS, zoom do aplicativo ou substituição de fonte. Ela está gravada nos arquivos OTF, TTF e WOFF2.
+> [!TIP]
+> O pacote inclui `MAPA-DE-GLIFOS.txt` com 32 pontos Unicode PUA diretos por família. Eles são a alternativa para aplicativos que não executam ligaturas OpenType.
 
-No simulador da landing page, o controle **Caixa / vista** oferece três leituras:
+## Webfont com os mesmos nomes
 
-- `A/a · Digitado`: respeita a caixa de cada código e permite misturar `m1 M1`;
-- `A · Perfil`: converte a sequência inteira para maiúsculas e mostra os dentes em perfil;
-- `a · Oclusal`: converte a sequência inteira para minúsculas e mostra as faces oclusais.
-
-## Instalação
-
-### macOS, Pages e Keynote
-
-1. No ZIP, abra a pasta `macOS` e instale somente `DentalIconsUpper-Regular.otf` e `DentalIconsLower-Regular.otf` no Catálogo de Fontes.
-2. Se uma versão anterior já existir, escolha **Substituir**, não **Manter Ambos**.
-3. Encerre completamente o Pages ou Keynote com `Command + Q` e abra novamente.
-4. Selecione `Dental Icons Up` ou `Dental Icons Down` na lista de fontes.
-5. Se `M1` ou `P2` não formar um dente: **Formatar → Fonte → Ligadura → Usar Padrão** ou **Usar Tudo**.
-
-### Windows e Microsoft Office
-
-1. No ZIP, abra a pasta `Windows-Linux` e instale somente os dois arquivos TTF.
-2. Selecione **Instalar para todos os usuários** quando disponível.
-3. Feche e reabra Word, PowerPoint ou o aplicativo de destino.
-4. Selecione uma das duas famílias Dental Icons e mantenha ligaturas padrão habilitadas.
-
-### LibreOffice e OpenOffice
-
-Instale os dois arquivos TTF da pasta `Windows-Linux` no sistema operacional, reinicie o aplicativo e selecione a família correspondente à arcada. O suporte a ligaturas OpenType pode variar conforme a versão e o mecanismo de layout de texto; nesse caso, use os códigos diretos de `MAPA-DE-GLIFOS.txt`.
-
-## Uso como webfont
-
-Copie o conteúdo da pasta `Web` — os dois WOFF2 e `dental-icons.css` — para o mesmo diretório:
+Publique os dois WOFF2 e `dental-icons.css` no mesmo diretório:
 
 ```html
 <link rel="stylesheet" href="/fonts/dental-icons.css">
+
 <span class="dental-icons-upper">M1 P2 C L I | I L C P2 M1</span>
 <span class="dental-icons-lower">m1 p2 c l i | i l c p2 m1</span>
 ```
 
-O CSS ativa ligaturas comuns e alternâncias contextuais, necessárias para os códigos compostos e para as formas do lado direito após a barra vertical.
-
-Para aplicar diretamente sem as classes auxiliares, use exatamente os mesmos nomes exibidos nos aplicativos de desktop:
+Também é possível aplicar as famílias diretamente:
 
 ```css
 .arcada-superior { font-family: "Dental Icons Up"; }
 .arcada-inferior { font-family: "Dental Icons Down"; }
 ```
 
-## Desenvolvimento e compilação
+O CSS fornecido já ativa `ccmp`, `liga`, `calt` e `kern`, necessários para códigos compostos e formas contextuais.
 
-Requisitos Python:
+## Novidades e melhorias
+
+### 1.1.5-beta · nomes unificados
+
+- **Dental Icons Up** e **Dental Icons Down** agora são os nomes canônicos em OTF, TTF, WOFF2, Pages, Word e CSS.
+- O CSS deixou de exigir os antigos aliases `Dental Icons Upper` e `Dental Icons Lower`.
+- Uma substituição contextual exclusiva recompõe “Dental Icons Up/Down” como texto legível nos menus, sem roubar `I`, `L`, `C` e `P` dos códigos dentários.
+- Landing page, instaladores, exemplos e documentação foram sincronizados com os nomes novos.
+
+### 1.1.4-beta · escala óptica e legibilidade
+
+- Os dentes foram ampliados em aproximadamente **19%** dentro do mesmo corpo de 1000 unidades por em.
+- A escala interna passou de `4.2` para `5.0`, mantendo o avanço em `520` unidades.
+- Os contornos permanecem na janela vertical segura de `-200` a `800`, reduzindo o risco de cortes no Pages, Word e PDF.
+- O tamanho 11 pt ganhou presença visual; para impressão confortável, recomenda-se começar entre 14 e 18 pt.
+- As letras usadas nos menus receberam desenho sans-serif mais limpo e curvas mais legíveis.
+
+### Landing page e demonstração
+
+- Interface localizada em português do Brasil, português de Portugal, inglês e espanhol.
+- Idioma lembrado localmente e detecção inicial por país quando não há preferência salva.
+- Simulador de sequência, arcada, vista, tamanho, espaçamento, composição e cor.
+- Comparação simultânea entre perfil e face oclusal.
+- Download oficial disponibilizado no site pessoal de Dante Testa.
+
+## Arquitetura tipográfica
+
+| Especificação | Implementação |
+|:--|:--|
+| Unidades por em | `1000 UPM` |
+| Avanço principal | `520` unidades |
+| Métricas verticais | ascendente `800`, descendente `-200` |
+| Contornos OTF | CFF / PostScript |
+| Contornos TTF e WOFF2 | TrueType quadrático |
+| Composição | `ccmp` e `liga` |
+| Lado anatômico | `calt` contextual após `|` |
+| Espaçamento | `kern` |
+| Fallback | 32 códigos Unicode PUA por família |
+| Incorporação | `fsType = 0`, instalação e embedding permitidos |
+
+O repositório preserva 64 referências raster, 64 SVGs Bézier e o pipeline reproduzível que gera todos os artefatos finais.
+
+<details>
+<summary><strong>Compilação e validação reproduzíveis</strong></summary>
+
+### Dependências
 
 ```bash
 python3 -m pip install -r requirements.txt
-```
-
-Ferramentas externas usadas pelo compilador:
-
-- `librsvg` (`rsvg-convert`);
-- ImageMagick (`magick`);
-- Potrace (`potrace`);
-- WOFF2 (`woff2_compress`, recomendado).
-
-No macOS com Homebrew:
-
-```bash
 brew install librsvg imagemagick potrace woff2
 ```
 
-Para refazer todo o pipeline:
+### Reconstruir fontes e pacote
 
 ```bash
 python3 -B scripts/vectorize_reference.py
 python3 -B scripts/build_fonts.py
 ```
 
-O segundo comando recompila as fontes e recria `dental-icons-font/downloads/dental-icons-font.zip` a partir de uma lista positiva de arquivos de distribuição.
+O empacotador trabalha a partir de uma lista positiva de runtime. O ZIP público não recebe arquivos internos, credenciais, testes, caches, históricos ou documentação de agentes.
 
-Para executar a validação reproduzível dos seis artefatos e do ZIP:
+### Executar os validadores
 
 ```bash
 python3 -B scripts/validate_fonts.py
 swift scripts/validate_coretext.swift build/fonts/*.otf build/fonts/*.ttf
 ```
 
-O primeiro comando confere tabelas obrigatórias, nomes, métricas, permissão de incorporação, mapas Unicode, contornos, ligaturas, alternâncias direita/esquerda, leitura pelo Fontconfig, descompressão WOFF2 e a lista positiva do ZIP. No macOS, o segundo confirma que CoreText — mecanismo usado pelos aplicativos nativos — reconhece as famílias e processa os recursos OpenType.
+Os testes conferem:
 
-Para visualizar a landing page localmente:
+- tabelas obrigatórias e integridade estrutural;
+- nomes internos, revisão, métricas e permissão de incorporação;
+- mapas Unicode e repertório PUA;
+- distinção entre maiúsculas e minúsculas;
+- ligaturas `P1`, `P2`, `M1`, `M2` e `M3`;
+- alternâncias esquerda/direita após a linha média;
+- legibilidade de `Dental Icons Up` e `Dental Icons Down`;
+- leitura por Fontconfig e CoreText;
+- descompressão e shaping dos WOFF2;
+- lista positiva, padrões sensíveis e CRC do ZIP público.
 
-```bash
-python3 -B -m http.server 8765 --bind 127.0.0.1
-```
+</details>
 
-Depois acesse `http://127.0.0.1:8765/dental-icons-font/`.
-
-## Estrutura
+<details>
+<summary><strong>Estrutura do projeto</strong></summary>
 
 ```text
 assets/reference-glyphs/      referências raster preservadas
 assets/reference-vectors/     SVGs Bézier que alimentam a fonte
-scripts/                      vetorização e compilação
-build/fonts/                  TTF, OTF, WOFF2 e staging do pacote
+scripts/                      vetorização, compilação e validadores
+build/fonts/                  OTF, TTF, WOFF2 e staging público
 dental-icons-font/            landing page e simulador
-dental-icons-font/downloads/  ZIP instalável entregue ao usuário
-index.html                    prova técnica simples
+dental-icons-font/downloads/  pacote ZIP gerado para o site oficial
+tests/                        prova de carregamento da webfont
+index.html                    inspeção técnica dos desenhos
 ```
 
-## Direitos
+</details>
 
-Copyright © 2026 Dante Testa. Todos os direitos reservados.
+## Autoria e proveniência
 
-Este é um projeto proprietário mantido em repositório privado. Nenhuma permissão de cópia, redistribuição, modificação, sublicenciamento ou comercialização é concedida sem autorização expressa e por escrito de Dante Testa. Consulte [`LICENSE`](LICENSE).
+Projeto concebido, dirigido e produzido por **Dante Testa** em 2026.
+
+Os glifos foram desenvolvidos a partir dos desenhos dentários de referência preservados em [`assets/reference-glyphs`](assets/reference-glyphs). Eles não foram extraídos de fonte comercial, biblioteca de ícones ou pacote vetorial de terceiros.
+
+O processo documentado no histórico Git inclui:
+
+1. isolamento das 64 referências por posição, arcada e vista;
+2. limpeza e reconstrução do eixo central;
+3. conversão de curvas Catmull–Rom para Bézier;
+4. normalização anatômica, óptica e métrica;
+5. geração de contornos TrueType e CFF/OpenType;
+6. criação de ligaturas, alternâncias contextuais e mapa PUA;
+7. geração determinística de OTF, TTF, WOFF2 e ZIP.
+
+Ferramentas de inteligência artificial auxiliaram o desenvolvimento sob direção, seleção e aprovação de Dante Testa. Os desenhos dentários e as decisões criativas deste projeto não são fornecidos por essas ferramentas nem por bibliotecas tipográficas externas.
+
+## Compatibilidade
+
+| Formato | Uso recomendado |
+|:--|:--|
+| **OTF/CFF** | macOS, Pages, Keynote, Office para Mac e aplicativos gráficos |
+| **TTF/TrueType** | Windows, Linux, Microsoft Office, LibreOffice e OpenOffice |
+| **WOFF2** | navegadores e sistemas web; não instalar como fonte desktop |
+
+As versões atuais foram validadas com FontTools, HarfBuzz, Fontconfig, WOFF2 e CoreText. Compatibilidade absoluta com toda versão histórica de todo editor não pode ser garantida; por isso o mapa PUA acompanha a distribuição.
+
+## Uso autorizado, autoria e direitos
+
+**Dental Icons Font pode ser usada gratuitamente em documentos, imagens, materiais impressos, sites, aplicativos e sistemas, inclusive em projetos profissionais e comerciais**, conforme os termos da [`LICENSE`](LICENSE).
+
+O repositório é público para transparência técnica, preservação da autoria e auditoria do processo criativo. A fonte não pode ser revendida, republicada como arquivo avulso, renomeada ou distribuída em versão modificada sem autorização expressa.
+
+**Download oficial:** [dantetesta.com.br/dental-icons-font](https://dantetesta.com.br/dental-icons-font/)<br>
+**Autor:** Dante Testa · [www.dantetesta.com.br](https://www.dantetesta.com.br)
+
+Copyright © 2026 Dante Testa. Todos os direitos não concedidos expressamente permanecem reservados.
 
 Dental Icons Font é uma ferramenta de representação visual e não substitui avaliação, diagnóstico ou documentação clínica profissional.
-
-## Compatibilidade e formatos
-
-- **OTF/CFF:** distribuição recomendada para macOS, Pages, Keynote, Office para Mac e aplicativos gráficos;
-- **TTF/TrueType:** distribuição recomendada para Windows, Linux, Microsoft Office, LibreOffice e OpenOffice;
-- **WOFF2:** distribuição exclusiva para navegadores e sistemas web; não deve ser instalada como fonte de desktop.
-
-As fontes usam tabelas OpenType padronizadas e foram validadas localmente com FontTools, HarfBuzz, Fontconfig, WOFF2, FontBakery e CoreText. Compatibilidade absoluta com toda versão histórica de todo editor não pode ser garantida; por isso o mapa PUA acompanha a distribuição como alternativa às ligaturas.
