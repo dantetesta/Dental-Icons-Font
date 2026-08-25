@@ -58,7 +58,7 @@ def validate_tables(path: Path, label: str, family: str) -> None:
         require({"gasp", "prep"} <= set(font.keys()), f"{path.name}: missing TrueType rasterization tables")
 
     require(font["head"].unitsPerEm == 1000, f"{path.name}: unexpected unitsPerEm")
-    require(round(font["head"].fontRevision, 3) == 1.101, f"{path.name}: wrong revision")
+    require(round(font["head"].fontRevision, 3) == 1.102, f"{path.name}: wrong revision")
     require(font["hhea"].ascent == 800 and font["hhea"].descent == -200, f"{path.name}: bad hhea metrics")
     require(font["hhea"].numberOfHMetrics == len(font.getGlyphOrder()), f"{path.name}: compressed/incomplete hmtx")
 

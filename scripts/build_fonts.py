@@ -27,8 +27,8 @@ ROOT = Path(__file__).resolve().parents[1]
 VECTORS = ROOT / "assets" / "reference-vectors"
 BUILD = ROOT / "build" / "fonts"
 PUBLIC_DOWNLOADS = ROOT / "dental-icons-font" / "downloads"
-VERSION = "1.1.1-beta"
-FONT_REVISION = 1.101
+VERSION = "1.1.2-beta"
+FONT_REVISION = 1.102
 UPM = 1000
 PROFILE_HEIGHT = 194
 OCCLUSAL_HEIGHT = 112
@@ -288,6 +288,12 @@ def character_map() -> dict[int, str]:
             mapping[PUA_START + view_index * 16 + position] = glyph_name(view, code, "r")
     for character in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789":
         mapping.setdefault(ord(character), "unsupported")
+    # Pages filters its font menu for the active document language. Advertising
+    # only ASCII makes the family disappear on a pt-BR system, even though Font
+    # Book accepts it. Latin-1 coverage keeps it discoverable in Portuguese and
+    # other Western-language documents while unsupported keys remain visible.
+    for codepoint in range(0x00C0, 0x0100):
+        mapping.setdefault(codepoint, "unsupported")
     return mapping
 
 

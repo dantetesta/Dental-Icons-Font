@@ -48,7 +48,7 @@ for argument in CommandLine.arguments.dropFirst() {
     let rightSide = shapedGlyphNames("| I L C P1 P2 M1 M2 M3", font: font).filter { $0.hasSuffix("_r") }
 
     if !family.hasPrefix("Dental Icons ") || style != "Regular" || !postScript.hasSuffix("-Regular") ||
-       !languages.contains("en") || composed != ["prof_m1_l"] || paired != ["occl_m1_l", "space", "prof_m1_l"] || rightSide.count != 8 {
+       !languages.contains("en") || !languages.contains("pt") || composed != ["prof_m1_l"] || paired != ["occl_m1_l", "space", "prof_m1_l"] || rightSide.count != 8 {
         fputs("FAIL \(argument): CoreText identity/shaping mismatch \(family) | \(style) | \(postScript) | \(composed) | \(paired) | right=\(rightSide.count)\n", stderr)
         failed = true
     } else {

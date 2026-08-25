@@ -4,7 +4,7 @@ Fonte vetorial para escrever representações dentárias em documentos, apresent
 
 - **Autor e diretor criativo:** Dante Testa
 - **Site:** [www.dantetesta.com.br](https://www.dantetesta.com.br)
-- **Versão atual:** 1.1.1-beta
+- **Versão atual:** 1.1.2-beta
 - **Ano de criação:** 2026
 
 > Projeto em fase beta. A anatomia deve passar por revisão odontológica antes de uso clínico definitivo.
