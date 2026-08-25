@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Dental Icons Font: escreva odontogramas no Word, PowerPoint, Pages, LibreOffice e na web. Criação de Dante Testa.">
+  <meta name="author" content="Dante Testa">
+  <meta name="theme-color" content="#f4fbf9">
+  <title>Dental Icons Font — escreva odontogramas</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#simulador">Ir para o simulador</a>
+
+  <header class="site-header">
+    <a class="brand" href="#inicio" aria-label="Dental Icons Font — início">
+      <svg viewBox="0 0 36 36" aria-hidden="true"><path d="M10 5c-5 3-4 11-2 18 2 7 4 10 7 7 2-2 1-8 3-8s2 6 3 8c3 3 5 0 7-7 2-7 3-15-2-18-3-2-5 2-8 2s-5-4-8-2Z"/></svg>
+      <span>Dental Icons<small>FONT</small></span>
+    </a>
+    <nav aria-label="Navegação principal">
+      <a href="#simulador">Testar</a><a href="#como-usar">Como usar</a><a href="#formatos">Formatos</a>
+    </nav>
+    <button class="button button-header" type="button" data-open-download>Baixar fonte <span>↘</span></button>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="hero-copy">
+        <p class="kicker"><span></span> Tipografia odontológica brasileira</p>
+        <h1>Uma fonte para escrever o que o <em>dentista vê.</em></h1>
+        <p class="hero-lead">Dentes em perfil e vista oclusal, organizados no teclado para criar odontogramas em documentos, apresentações, aplicativos e sites.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#simulador">Experimentar agora <span>↓</span></a>
+          <button class="link-button" type="button" data-open-download>Baixar para instalar <span>↗</span></button>
+        </div>
+        <dl class="hero-stats">
+          <div><dt>64</dt><dd>glifos anatômicos</dd></div><div><dt>4</dt><dd>leituras clínicas</dd></div><div><dt>∞</dt><dd>escala vetorial</dd></div>
+        </dl>
+      </div>
+
+      <div class="hero-visual" id="hero-visual" aria-label="Arcada criada com a Dental Icons Font">
+        <canvas id="hero-field" aria-hidden="true"></canvas>
+        <div class="hero-orbit-label"><span>ESPÉCIME INTERATIVO</span><b>64 GLIFOS / 4 VISTAS</b></div>
+        <div class="hero-arch" id="hero-arch"></div>
+        <div class="hero-focus" aria-live="polite"><small>SOB O CURSOR</small><strong id="hero-focus-code">M1</strong><span id="hero-focus-label">superior · perfil</span></div>
+        <div class="hero-note"><i></i><span>Mova o cursor<br>para observar</span></div>
+      </div>
+    </section>
+
+    <section class="use-strip" aria-label="Compatibilidade">
+      <p>Uma instalação. O mesmo idioma visual em:</p>
+      <div><span>Microsoft <b>Office</b></span><span>Apple <b>Pages</b></span><span><b>Libre</b>Office</span><span><b>Open</b>Office</span><span>Sites <b>&amp; apps</b></span></div>
+    </section>
+
+    <section class="simulator" id="simulador" aria-labelledby="sim-title">
+      <div class="section-intro">
+        <p class="kicker"><span></span> Laboratório interativo</p>
+        <h2 id="sim-title">Digite. Configure.<br><em>Use de verdade.</em></h2>
+        <p>Teste a fonte nos cenários mais comuns do consultório. Cada ajuste acontece em tempo real.</p>
+      </div>
+
+      <div class="lab-shell">
+        <aside class="lab-controls" aria-label="Controles do simulador">
+          <div class="control-group control-sequence">
+            <div class="control-title"><span>01</span><label for="sequence-input">Sequência dentária</label></div>
+            <textarea id="sequence-input" rows="3" spellcheck="false">M3 M2 M1 P2 P1 C L I | I L C P1 P2 M1 M2 M3</textarea>
+            <p>Misture M1 e m1 para ver perfil e face juntos. Use “|” para a linha média.</p>
+            <div class="preset-list" aria-label="Sequências prontas"><button type="button" data-preset="complete" class="active">Arcada completa</button><button type="button" data-preset="anterior">Anteriores</button><button type="button" data-preset="posterior">Posteriores</button><button type="button" data-preset="hemi">Meia arcada</button></div>
+          </div>
+
+          <div class="control-group">
+            <div class="control-title"><span>02</span><b>Leitura clínica</b></div>
+            <div class="double-control">
+              <div><small>Arcada</small><div class="segment" data-control="arch"><button type="button" class="active" data-value="upper" aria-pressed="true">Superior</button><button type="button" data-value="lower" aria-pressed="false">Inferior</button></div></div>
+              <div><small>Vista</small><div class="segment" data-control="view"><button type="button" class="active" data-value="profile" aria-pressed="true">Perfil</button><button type="button" data-value="occlusal" aria-pressed="false">Oclusal</button></div></div>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="control-title"><span>03</span><b>Composição</b></div>
+            <div class="double-control">
+              <label class="range-control">Tamanho <output id="size-output">72 px</output><input id="size-range" type="range" min="46" max="140" value="72"></label>
+              <label class="range-control">Espaço <output id="spacing-output">4 px</output><input id="spacing-range" type="range" min="0" max="34" value="4"></label>
+            </div>
+            <div class="segment layout-segment" data-control="layout"><button type="button" class="active" data-value="linear" aria-pressed="true">Linha</button><button type="button" data-value="arch" aria-pressed="false">Curva dental</button><button type="button" data-value="compact" aria-pressed="false">Compacta</button></div>
+          </div>
+
+          <div class="control-group visual-control">
+            <div class="control-title"><span>04</span><b>Aparência</b></div>
+            <div class="swatches" aria-label="Cor do odontograma"><button type="button" class="active" data-color="#087f6a" style="--color:#087f6a" aria-label="Verde clínico" aria-pressed="true"></button><button type="button" data-color="#1166cc" style="--color:#1166cc" aria-label="Azul" aria-pressed="false"></button><button type="button" data-color="#202b2a" style="--color:#202b2a" aria-label="Grafite" aria-pressed="false"></button><button type="button" data-color="#9c3d59" style="--color:#9c3d59" aria-label="Vinho" aria-pressed="false"></button></div>
+            <label class="check"><input id="show-labels" type="checkbox" checked><span></span> Mostrar códigos</label>
+          </div>
+        </aside>
+
+        <div class="lab-preview">
+          <div class="preview-toolbar">
+            <div class="context-switch" role="group" aria-label="Contexto de visualização"><button type="button" class="active" data-context="document">Documento</button><button type="button" data-context="slide">Slide</button><button type="button" data-context="web">Sistema web</button><button type="button" data-context="print">Impressão</button></div>
+            <span class="zoom-label">PREVIEW · 100%</span>
+          </div>
+          <div class="preview-workspace" data-context-view="document">
+            <div class="context-chrome" aria-hidden="true"><i></i><i></i><i></i><span>Ficha clínica — Odontograma</span></div>
+            <div class="preview-paper">
+              <div class="paper-heading"><div><small>ODONTOGRAMA</small><strong id="preview-title">Arcada superior — perfil</strong></div><span id="position-count">16 POSIÇÕES</span></div>
+              <div id="live-odontogram" class="live-odontogram" aria-live="polite"></div>
+              <div class="paper-caption"><span id="typed-sequence">M3 M2 M1 P2 P1 C L I | I L C P1 P2 M1 M2 M3</span><i>Dental Icons Font</i></div>
+            </div>
+          </div>
+          <div class="preview-actions"><button type="button" id="copy-sequence"><span>⧉</span> Copiar sequência</button><button type="button" id="export-png"><span>↓</span> Exportar PNG</button><button type="button" class="action-primary" data-open-download>Usar a fonte no meu computador <span>↗</span></button></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="compare" id="como-usar" aria-labelledby="compare-title">
+      <div class="compare-heading">
+        <div><p class="kicker"><span></span> Entenda em um segundo</p><h2 id="compare-title">Um código.<br><em>Duas leituras.</em></h2></div>
+        <p>Digite o código de um dente e compare simultaneamente o perfil e a face oclusal. A única mudança no teclado é usar maiúscula ou minúscula.</p>
+      </div>
+      <div class="compare-console">
+        <div class="compare-inputs">
+          <label for="compare-code"><span>Digite um código</span><input id="compare-code" type="text" value="M1" maxlength="2" spellcheck="false" autocomplete="off"></label>
+          <div class="compare-presets" aria-label="Códigos dentários"><button type="button" data-compare-code="I">I</button><button type="button" data-compare-code="L">L</button><button type="button" data-compare-code="C">C</button><button type="button" data-compare-code="P1">P1</button><button type="button" data-compare-code="P2">P2</button><button type="button" data-compare-code="M1" class="active">M1</button><button type="button" data-compare-code="M2">M2</button><button type="button" data-compare-code="M3">M3</button></div>
+          <div class="compare-options">
+            <div><small>Arcada</small><div class="compare-segment" data-compare="arch"><button type="button" class="active" data-value="upper">Superior</button><button type="button" data-value="lower">Inferior</button></div></div>
+            <div><small>Lado</small><div class="compare-segment" data-compare="side"><button type="button" class="active" data-value="left">Esquerdo</button><button type="button" data-value="right">Direito</button></div></div>
+          </div>
+          <div class="compare-rule"><i>A</i><span>Maiúscula mostra o perfil.<br>Minúscula mostra a face.</span><i>a</i></div>
+        </div>
+        <div class="compare-stage">
+          <article class="compare-card profile-card">
+            <div class="compare-card-top"><span>MAIÚSCULA</span><b id="compare-profile-code">M1</b></div>
+            <div class="compare-art"><span class="compare-glow"></span><img id="compare-profile-art" src="assets/glyphs/upper-profile-03-m1.svg" alt="Primeiro molar superior em perfil"></div>
+            <div><small>VISTA 01</small><h3>Dente em perfil</h3><p>Coroa e raízes representadas em um único glifo.</p></div>
+          </article>
+          <div class="compare-equals" aria-hidden="true"><span>MESMO DENTE</span><b>=</b></div>
+          <article class="compare-card occlusal-card">
+            <div class="compare-card-top"><span>MINÚSCULA</span><b id="compare-occlusal-code">m1</b></div>
+            <div class="compare-art"><span class="compare-glow"></span><img id="compare-occlusal-art" src="assets/glyphs/upper-occlusal-03-m1.svg" alt="Primeiro molar superior em vista oclusal"></div>
+            <div><small>VISTA 02</small><h3>Face oclusal</h3><p>Superfície e sulcos do mesmo elemento dental.</p></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="formats" id="formatos" aria-labelledby="formats-title">
+      <div class="formats-index"><span>01—03</span><i></i></div>
+      <div class="formats-copy"><p class="kicker"><span></span> Pronta para acompanhar seu trabalho</p><h2 id="formats-title">Do laudo impresso<br>ao software da clínica.</h2></div>
+      <div class="format-rows"><article><span>.TTF</span><h3>Office &amp; OpenOffice</h3><p>Instale no Windows ou Linux e selecione Dental Icons como qualquer outra fonte.</p><b>01</b></article><article><span>.OTF</span><h3>Apple &amp; criação gráfica</h3><p>Use no macOS, Pages, Keynote e aplicativos compatíveis com fontes instaladas.</p><b>02</b></article><article><span>.WOFF2</span><h3>Sites &amp; sistemas</h3><p>Integre via <code>@font-face</code> para odontogramas rápidos, nítidos e responsivos.</p><b>03</b></article></div>
+    </section>
+
+    <section class="install" aria-labelledby="install-title">
+      <div class="install-side"><p class="kicker"><span></span> Instalação guiada</p><h2 id="install-title">Baixou.<br>Instalou.<br>Digitou.</h2><p>Escolha seu ambiente para ver o passo a passo.</p></div>
+      <div class="install-interface">
+        <div class="install-tabs" role="tablist" aria-label="Plataforma"><button id="tab-windows" type="button" role="tab" aria-selected="true" data-tab="windows">Windows</button><button id="tab-apple" type="button" role="tab" aria-selected="false" data-tab="apple">Apple</button><button id="tab-open" type="button" role="tab" aria-selected="false" data-tab="open">Libre / OpenOffice</button><button id="tab-web" type="button" role="tab" aria-selected="false" data-tab="web">Webfont</button></div>
+        <div class="install-panel" id="panel-windows" role="tabpanel"><ol><li><i>1</i><div><b>Extraia o pacote</b><span>Localize DentalIcons.ttf ou DentalIcons.otf.</span></div></li><li><i>2</i><div><b>Instale a fonte</b><span>Dê dois cliques e selecione “Instalar”.</span></div></li><li><i>3</i><div><b>Reabra seu aplicativo</b><span>Selecione Dental Icons no Word ou PowerPoint.</span></div></li></ol></div>
+        <div class="install-panel" id="panel-apple" role="tabpanel" hidden><ol><li><i>1</i><div><b>Instale os dois arquivos OTF</b><span>Upper para a arcada superior e Lower para a inferior. Se já existirem, escolha “Substituir”.</span></div></li><li><i>2</i><div><b>Encerre e reabra o Pages</b><span>Use Command-Q para o aplicativo atualizar a lista de fontes.</span></div></li><li><i>3</i><div><b>Ative as ligaturas</b><span>Use Formatar › Fonte › Ligadura › Usar Padrão ou Usar Tudo.</span></div></li></ol></div>
+        <div class="install-panel" id="panel-open" role="tabpanel" hidden><ol><li><i>1</i><div><b>Instale no sistema</b><span>Use o gerenciador de fontes do seu computador.</span></div></li><li><i>2</i><div><b>Reinicie a suíte</b><span>Feche também o Quickstarter, se estiver ativo.</span></div></li><li><i>3</i><div><b>Selecione Dental Icons</b><span>A fonte aparecerá junto às demais famílias.</span></div></li></ol></div>
+        <div class="install-panel code-panel" id="panel-web" role="tabpanel" hidden><div><span>styles.css</span><button id="copy-code" type="button">Copiar</button></div><pre><code id="webfont-code">@font-face {
+  font-family: "Dental Icons Upper";
+  src: url("DentalIconsUpper-Regular.woff2") format("woff2");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Dental Icons Lower";
+  src: url("DentalIconsLower-Regular.woff2") format("woff2");
+  font-display: swap;
+}
+
+.arcada-superior { font-family: "Dental Icons Upper"; }
+.arcada-inferior { font-family: "Dental Icons Lower"; }</code></pre></div>
+      </div>
+    </section>
+
+    <section class="final-cta" id="download">
+      <div class="final-art" aria-hidden="true"><img src="assets/glyphs/lower-profile-14-m1.svg" alt=""></div>
+      <div><p class="kicker"><span></span> Feita para dentistas</p><h2>Seu próximo odontograma começa com uma tecla.</h2><p>Dental Icons Font para documentos, apresentações e produtos digitais.</p><button class="button button-primary" type="button" data-open-download>Baixar Dental Icons Font <span>↓</span></button></div>
+      <ul><li>Famílias Upper + Lower</li><li>TTF para Windows</li><li>OTF para macOS</li><li>WOFF2 + CSS para web</li></ul>
+    </section>
+
+    <section class="author" aria-label="Autor">
+      <span class="author-mark">DT</span><div><small>IDEALIZAÇÃO &amp; DESENVOLVIMENTO</small><h2>Dante Testa</h2></div><p>Uma ferramenta tipográfica criada para aproximar a linguagem odontológica dos produtos que o dentista já usa.</p><a href="https://www.dantetesta.com.br" target="_blank" rel="noopener">www.dantetesta.com.br <span>↗</span></a>
+    </section>
+  </main>
+
+  <footer><a class="brand" href="#inicio"><span>Dental Icons<small>FONT</small></span></a><p>© 2026 Dante Testa</p><a href="#inicio">Voltar ao topo ↑</a></footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

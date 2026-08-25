@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Demonstração da fonte Dental Icons baseada nos desenhos odontológicos de referência.">
+  <title>Dental Icons Font — prova fiel à referência</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="page-header">
+    <p class="kicker">Dental Icons Font · protótipo</p>
+    <h1>Fonte tipográfica para odontograma</h1>
+    <p class="subtitle">Maiúsculas = dente de perfil <span aria-hidden="true">|</span> Minúsculas = face / vista oclusal</p>
+  </header>
+
+  <main>
+    <section class="tester panel" aria-labelledby="tester-title">
+      <div class="section-title">
+        <div>
+          <p class="section-kicker">Teste de digitação</p>
+          <h2 id="tester-title">Veja a sequência como fonte</h2>
+        </div>
+        <p>Os desenhos abaixo seguem a referência enviada, agora com eixo vetorial suavizado, espessura única e margens normalizadas.</p>
+      </div>
+
+      <div class="controls" aria-label="Configuração da arcada">
+        <fieldset>
+          <legend>Arcada</legend>
+          <div class="button-group" data-control="arch">
+            <button type="button" class="active" data-value="upper" aria-pressed="true">Superior</button>
+            <button type="button" data-value="lower" aria-pressed="false">Inferior</button>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Representação</legend>
+          <div class="button-group" data-control="view">
+            <button type="button" class="active" data-value="profile" aria-pressed="true">Perfil · maiúsculas</button>
+            <button type="button" data-value="occlusal" aria-pressed="false">Oclusal · minúsculas</button>
+          </div>
+        </fieldset>
+        <label class="size-field" for="glyph-size">
+          <span>Tamanho <output id="size-value">72 px</output></span>
+          <input id="glyph-size" type="range" min="44" max="112" value="72">
+        </label>
+      </div>
+
+      <label class="sequence-label" for="sequence">Digite os códigos separados por espaço</label>
+      <div class="input-line">
+        <input id="sequence" type="text" value="M3 M2 M1 P2 P1 C L I | I L C P1 P2 M1 M2 M3" spellcheck="false" autocomplete="off">
+        <button id="apply" type="button">Mostrar</button>
+      </div>
+      <p class="input-help">Códigos: I, L, C, P1, P2, M1, M2 e M3. O caractere “|” marca a linha média.</p>
+
+      <div class="live-preview">
+        <div class="preview-heading">
+          <span id="preview-title">Arco superior — perfil</span>
+          <span id="position-count">16 posições</span>
+        </div>
+        <div id="live-arch" class="glyph-row live-row" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="character-map panel" aria-labelledby="map-title">
+      <div class="map-heading">
+        <div>
+          <p class="section-kicker">Mapa completo</p>
+          <h2 id="map-title">64 glifos de referência</h2>
+        </div>
+        <div class="source-badge"><span></span> vetorizados a partir da imagem original</div>
+      </div>
+      <div id="reference-rows"></div>
+    </section>
+
+    <section class="legend-panel" aria-labelledby="legend-title">
+      <div>
+        <p class="section-kicker">Classificação</p>
+        <h2 id="legend-title">Códigos usados na fonte</h2>
+      </div>
+      <dl class="legend-grid">
+        <div><dt>I / i</dt><dd>incisivo central</dd></div>
+        <div><dt>L / l</dt><dd>incisivo lateral</dd></div>
+        <div><dt>C / c</dt><dd>canino</dd></div>
+        <div><dt>P1 / p1</dt><dd>1º pré-molar</dd></div>
+        <div><dt>P2 / p2</dt><dd>2º pré-molar</dd></div>
+        <div><dt>M1 / m1</dt><dd>1º molar</dd></div>
+        <div><dt>M2 / m2</dt><dd>2º molar</dd></div>
+        <div><dt>M3 / m3</dt><dd>3º molar (siso)</dd></div>
+      </dl>
+    </section>
+
+    <p class="prototype-note"><strong>Observação:</strong> esta página já usa 64 SVGs monoline vetoriais derivados da referência, com peso óptico uniforme. A etapa seguinte é a revisão anatômica individual e a compilação como TTF, OTF e WOFF2.</p>
+  </main>
+
+  <footer>
+    <span>Dental Icons Font</span>
+    <span>Prova de fidelidade visual · 2026</span>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+DENTAL ICONS FONT — 1.0.1-beta
+Autor: Dante Testa
+Site: https://www.dantetesta.com.br
+
+Dental Icons Upper: arcada superior.
+Dental Icons Lower: arcada inferior.
+Maiúsculas: dentes em perfil. Minúsculas: vista oclusal.
+
+Códigos: I, L, C, P1, P2, M1, M2, M3.
+Exemplo: M3 M2 M1 P2 P1 C L I | I L C P1 P2 M1 M2 M3
+
+Instalação no macOS / Pages:
+1. Abra os dois arquivos OTF no Catálogo de Fontes.
+2. Se já existir uma versão, escolha Substituir (não Manter Ambos).
+3. Encerre completamente o Pages com Command-Q e abra novamente.
+4. No Pages, procure Dental Icons Upper ou Dental Icons Lower.
+5. Se M1/P2 não virar um dente, use Formatar > Fonte > Ligadura > Usar Padrão ou Usar Tudo.
+
+No Windows: abra os dois arquivos TTF, selecione Instalar e reinicie o Office.
+Web: envie os arquivos WOFF2 e dental-icons.css para o mesmo diretório.
+
+Versão beta: recomenda-se validação anatômica antes de uso clínico definitivo.
