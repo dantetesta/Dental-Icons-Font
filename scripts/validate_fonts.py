@@ -17,8 +17,8 @@ ROOT = Path(__file__).resolve().parents[1]
 FONTS = ROOT / "build" / "fonts"
 ZIP_PATH = ROOT / "dental-icons-font" / "downloads" / "dental-icons-font.zip"
 FAMILIES = {
-    "Upper": "ODONTO ABOVE",
-    "Lower": "ODONTO UNDER",
+    "Upper": "Dental Icons Up",
+    "Lower": "Dental Icons Down",
 }
 FORMATS = ("otf", "ttf", "woff2")
 PUA = set(range(0xE000, 0xE020))
@@ -58,7 +58,7 @@ def validate_tables(path: Path, label: str, family: str) -> None:
         require({"gasp", "prep"} <= set(font.keys()), f"{path.name}: missing TrueType rasterization tables")
 
     require(font["head"].unitsPerEm == 1000, f"{path.name}: unexpected unitsPerEm")
-    require(round(font["head"].fontRevision, 3) == 1.104, f"{path.name}: wrong revision")
+    require(round(font["head"].fontRevision, 3) == 1.105, f"{path.name}: wrong revision")
     require(font["hhea"].ascent == 800 and font["hhea"].descent == -200, f"{path.name}: bad hhea metrics")
     require(font["hhea"].numberOfHMetrics == len(font.getGlyphOrder()), f"{path.name}: compressed/incomplete hmtx")
 
@@ -124,11 +124,19 @@ def validate_shaping(path: Path) -> None:
     require(shape(path, "M1", "ccmp=0,liga=0,calt=0,kern=0") == ["Mbase", "one"], f"{path.name}: visible non-ligature fallback failed")
     require(shape(path, "\ue000") == ["prof_m3_l"], f"{path.name}: direct PUA fallback failed")
     require(
-        shape(path, "ODONTO ABOVE") == [
-            "menu_o", "menu_d", "menu_o", "menu_n", "menu_t", "menu_o", "space",
-            "menu_a", "menu_b", "menu_o", "menu_v", "menu_e",
+        shape(path, "Dental Icons Up") == [
+            "menu_d", "menu_e", "menu_n", "menu_t", "menu_a", "menu_l", "space",
+            "menu_i", "menu_c", "menu_o", "menu_n", "menu_s", "space", "menu_u", "menu_p",
         ],
         f"{path.name}: application-menu family name is not readable",
+    )
+    require(
+        shape(path, "Dental Icons Down") == [
+            "menu_d", "menu_e", "menu_n", "menu_t", "menu_a", "menu_l", "space",
+            "menu_i", "menu_c", "menu_o", "menu_n", "menu_s", "space",
+            "menu_d", "menu_o", "menu_w", "menu_n",
+        ],
+        f"{path.name}: lower application-menu family name is not readable",
     )
 
 
@@ -162,6 +170,9 @@ def validate_zip() -> None:
             require(forbidden not in lowered, f"ZIP contains forbidden pattern: {forbidden}")
         css = archive.read("Web/dental-icons.css").decode("utf-8")
         require(css.count("@font-face") == 2 and 'format("woff2")' in css, "Web CSS is incomplete")
+        require(css.count('font-family: "Dental Icons Up"') == 2, "Upper web family is not standardized")
+        require(css.count('font-family: "Dental Icons Down"') == 2, "Lower web family is not standardized")
+        require("Dental Icons Upper" not in css and "Dental Icons Lower" not in css, "Legacy web aliases remain in CSS")
 
 
 def main() -> None:

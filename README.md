@@ -4,7 +4,7 @@ Fonte vetorial para escrever representações dentárias em documentos, apresent
 
 - **Autor e diretor criativo:** Dante Testa
 - **Site:** [www.dantetesta.com.br](https://www.dantetesta.com.br)
-- **Versão atual:** 1.1.4-beta
+- **Versão atual:** 1.1.5-beta
 - **Ano de criação:** 2026
 
 > Projeto em fase beta. A anatomia deve passar por revisão odontológica antes de uso clínico definitivo.
@@ -13,7 +13,7 @@ Fonte vetorial para escrever representações dentárias em documentos, apresent
 
 - 64 referências raster isoladas: 16 posições × 2 arcadas × 2 vistas;
 - 64 SVGs monoline reconstruídos com curvas Bézier;
-- duas famílias tipográficas de desktop: `ODONTO ABOVE` e `ODONTO UNDER`;
+- duas famílias tipográficas padronizadas: `Dental Icons Up` e `Dental Icons Down`;
 - arquivos instaláveis TTF e OTF;
 - webfonts WOFF2 e folha CSS;
 - 32 pontos Unicode PUA diretos por família para aplicativos sem ligaturas;
@@ -53,7 +53,7 @@ O desenvolvimento foi assistido por ferramentas de inteligência artificial sob 
 | `M2` / `m2` | Segundo molar | perfil | face oclusal |
 | `M3` / `m3` | Terceiro molar | perfil | face oclusal |
 
-Use `ODONTO ABOVE` para a arcada superior e `ODONTO UNDER` para a inferior. Esses nomes usam um pequeno alfabeto sans-serif original, incorporado somente para que a família permaneça legível no seletor do Pages e do Word. Ele não altera os códigos dentários. Os aliases web continuam sendo `Dental Icons Upper` e `Dental Icons Lower`. A barra vertical separa os lados e ativa as formas contextuais do lado direito:
+Use `Dental Icons Up` para a arcada superior e `Dental Icons Down` para a inferior. Os mesmos nomes são usados no Pages, Word, OTF, TTF, WOFF2 e CSS. Uma substituição contextual exclusiva recompõe esses nomes como texto legível nos seletores de fontes, sem alterar os códigos dentários `I`, `L`, `C` e `P` durante o uso normal. A barra vertical separa os lados e ativa as formas contextuais do lado direito:
 
 ```text
 M3 M2 M1 P2 P1 C L I | I L C P1 P2 M1 M2 M3
@@ -82,7 +82,7 @@ No simulador da landing page, o controle **Caixa / vista** oferece três leitura
 1. No ZIP, abra a pasta `macOS` e instale somente `DentalIconsUpper-Regular.otf` e `DentalIconsLower-Regular.otf` no Catálogo de Fontes.
 2. Se uma versão anterior já existir, escolha **Substituir**, não **Manter Ambos**.
 3. Encerre completamente o Pages ou Keynote com `Command + Q` e abra novamente.
-4. Selecione `ODONTO ABOVE` ou `ODONTO UNDER` na lista de fontes.
+4. Selecione `Dental Icons Up` ou `Dental Icons Down` na lista de fontes.
 5. Se `M1` ou `P2` não formar um dente: **Formatar → Fonte → Ligadura → Usar Padrão** ou **Usar Tudo**.
 
 ### Windows e Microsoft Office
@@ -107,6 +107,13 @@ Copie o conteúdo da pasta `Web` — os dois WOFF2 e `dental-icons.css` — para
 ```
 
 O CSS ativa ligaturas comuns e alternâncias contextuais, necessárias para os códigos compostos e para as formas do lado direito após a barra vertical.
+
+Para aplicar diretamente sem as classes auxiliares, use exatamente os mesmos nomes exibidos nos aplicativos de desktop:
+
+```css
+.arcada-superior { font-family: "Dental Icons Up"; }
+.arcada-inferior { font-family: "Dental Icons Down"; }
+```
 
 ## Desenvolvimento e compilação
 

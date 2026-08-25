@@ -28,8 +28,8 @@ ROOT = Path(__file__).resolve().parents[1]
 VECTORS = ROOT / "assets" / "reference-vectors"
 BUILD = ROOT / "build" / "fonts"
 PUBLIC_DOWNLOADS = ROOT / "dental-icons-font" / "downloads"
-VERSION = "1.1.4-beta"
-FONT_REVISION = 1.104
+VERSION = "1.1.5-beta"
+FONT_REVISION = 1.105
 UPM = 1000
 PROFILE_HEIGHT = 194
 OCCLUSAL_HEIGHT = 112
@@ -43,10 +43,12 @@ ADVANCE = 520
 VERTICAL_SHIFT = -140
 FONT_TIMESTAMP = 3870504000  # 2026-08-25 12:00 UTC in the OpenType epoch.
 PUA_START = 0xE000
-MENU_LETTERS = "ABDENORTUV"
+MENU_LETTERS = "ABCDEILNOPRSTUVW"
+MENU_CODE_LETTERS = set("ILCP")
 MENU_WIDTHS = {
-    "A": 500, "B": 500, "D": 520, "E": 460, "N": 520,
-    "O": 540, "R": 500, "T": 480, "U": 520, "V": 500,
+    "A": 500, "B": 500, "C": 500, "D": 520, "E": 460,
+    "I": 320, "L": 450, "N": 520, "O": 540, "P": 490,
+    "R": 500, "S": 480, "T": 480, "U": 520, "V": 500, "W": 650,
 }
 LEFT_CODES = ["M3", "M2", "M1", "P2", "P1", "C", "L", "I"]
 RIGHT_CODES = ["I", "L", "C", "P1", "P2", "M1", "M2", "M3"]
@@ -213,7 +215,7 @@ def menu_letter_outline(kind: str, letter: str):
 
     Pages and Word preview the family name with the selected font itself. The
     dental code letters cannot be replaced, so the safe letters in the names
-    ODONTO ABOVE / ODONTO UNDER receive this compact, human-readable alphabet.
+    Dental Icons Up / Dental Icons Down receive this compact, human-readable alphabet.
     """
     width = MENU_WIDTHS[letter]
     pen = drawing_pen(kind, width)
@@ -234,20 +236,34 @@ def menu_letter_outline(kind: str, letter: str):
         rectangle(pen, left, bottom, left + stroke, top)
         rounded_ring(pen, (left, middle - 12, right, top, 118), (left + stroke, middle + 46, right - 70, top - 58, 62))
         rounded_ring(pen, (left, bottom, right, middle + 18, 126), (left + stroke, bottom + 58, right - 70, middle - 40, 66))
+    elif letter == "C":
+        vertical(left); horizontal(bottom); horizontal(top - stroke)
     elif letter == "D":
         rounded_ring(pen, (left, bottom, right, top, 190), (left + stroke, bottom + 58, right - 66, top - 58, 132))
         rectangle(pen, left, bottom, left + stroke, top)
     elif letter == "E":
         vertical(left); horizontal(bottom); horizontal(middle); horizontal(top - stroke)
+    elif letter == "I":
+        horizontal(bottom); horizontal(top - stroke)
+        center = width // 2
+        rectangle(pen, center - stroke // 2, bottom, center + stroke // 2, top)
+    elif letter == "L":
+        vertical(left); horizontal(bottom)
     elif letter == "N":
         vertical(left); vertical(right - stroke)
         polygon(pen, [(left + stroke, top), (left + 2 * stroke, top), (right - stroke, bottom), (right - 2 * stroke, bottom)])
     elif letter == "O":
         rounded_ring(pen, (left, bottom, right, top, 205), (left + 64, bottom + 62, right - 64, top - 62, 145))
+    elif letter == "P":
+        rectangle(pen, left, bottom, left + stroke, top)
+        rounded_ring(pen, (left, middle - 8, right, top, 122), (left + stroke, middle + 50, right - 68, top - 58, 64))
     elif letter == "R":
         rectangle(pen, left, bottom, left + stroke, top)
         rounded_ring(pen, (left, middle - 8, right, top, 122), (left + stroke, middle + 50, right - 68, top - 58, 64))
         polygon(pen, [(210, middle + 22), (276, middle + 22), (right, bottom), (right - 70, bottom)])
+    elif letter == "S":
+        horizontal(bottom); horizontal(middle); horizontal(top - stroke)
+        vertical(left, middle, top); vertical(right - stroke, bottom, middle + stroke)
     elif letter == "T":
         center = width // 2
         horizontal(top - stroke); rectangle(pen, center - stroke // 2, bottom, center + stroke // 2, top)
@@ -269,6 +285,12 @@ def menu_letter_outline(kind: str, letter: str):
         center = width // 2
         polygon(pen, [(left, top), (left + 66, top), (center + 15, bottom), (center - 38, bottom)])
         polygon(pen, [(right - 66, top), (right, top), (center + 38, bottom), (center - 15, bottom)])
+    elif letter == "W":
+        quarter = width // 4
+        polygon(pen, [(left, top), (left + 62, top), (quarter + 24, bottom), (quarter - 28, bottom)])
+        polygon(pen, [(quarter - 28, bottom), (quarter + 24, bottom), (width // 2 + 28, top), (width // 2 - 24, top)])
+        polygon(pen, [(width // 2 - 28, top), (width // 2 + 24, top), (3 * quarter + 28, bottom), (3 * quarter - 24, bottom)])
+        polygon(pen, [(3 * quarter - 24, bottom), (3 * quarter + 28, bottom), (right, top), (right - 62, top)])
     else:
         raise ValueError(f"Unsupported menu letter: {letter}")
     return finish_pen(pen, kind)
@@ -314,6 +336,20 @@ def feature_code() -> str:
     all_teeth = tooth_glyphs()
     ligatures = tooth_glyphs(("M1", "M2", "M3", "P1", "P2"))
     bases = [glyph for glyph in all_teeth if glyph not in ligatures]
+    menu_name_rules = [
+        "lookup MenuNameDental {",
+        "  sub menu_d menu_e menu_n menu_t menu_a occl_l_l' by menu_l;",
+        "} MenuNameDental;",
+        "lookup MenuNameIconsI {",
+        "  sub prof_i_l' occl_c_l menu_o menu_n menu_s by menu_i;",
+        "} MenuNameIconsI;",
+        "lookup MenuNameIconsC {",
+        "  sub menu_i occl_c_l' menu_o menu_n menu_s by menu_c;",
+        "} MenuNameIconsC;",
+        "lookup MenuNameUp {",
+        "  sub menu_u pbase' by menu_p;",
+        "} MenuNameUp;",
+    ]
     rules = [
         "table GDEF {",
         f"GlyphClassDef [{' '.join(bases)} bar Mbase Pbase mbase pbase one two three], [{' '.join(ligatures)}], [], [];",
@@ -323,8 +359,15 @@ def feature_code() -> str:
         # processed early by shaping engines; liga keeps the familiar fallback
         # for applications that expose only a Ligatures switch.
         "lookup ComposeTeeth {", *ligature_rules, "} ComposeTeeth;",
+        *menu_name_rules,
         *lookup_rules,
-        "feature ccmp { lookup ComposeTeeth; } ccmp;",
+        "feature ccmp {",
+        "  lookup ComposeTeeth;",
+        "  lookup MenuNameDental;",
+        "  lookup MenuNameIconsI;",
+        "  lookup MenuNameIconsC;",
+        "  lookup MenuNameUp;",
+        "} ccmp;",
         "feature liga { lookup ComposeTeeth;", *[f"  lookup {name};" for name in lookup_names], "} liga;",
         "feature calt {", *[f"  lookup {name};" for name in lookup_names], "} calt;",
         "feature kern {",
@@ -367,7 +410,7 @@ def collect_outlines(arch: str, kind: str, temporary: Path):
 
 def font_names(arch: str):
     label = "Upper" if arch == "upper" else "Lower"
-    family = "ODONTO ABOVE" if arch == "upper" else "ODONTO UNDER"
+    family = "Dental Icons Up" if arch == "upper" else "Dental Icons Down"
     return label, family, f"DentalIcons{label}-Regular"
 
 
@@ -404,11 +447,13 @@ def character_map() -> dict[int, str]:
             mapping[PUA_START + view_index * 16 + position] = glyph_name(view, code, "r")
     for character in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789":
         mapping.setdefault(ord(character), "unsupported")
-    # Pages previews a family name using the font itself. These safe capitals
-    # make ODONTO ABOVE / ODONTO UNDER readable without stealing any of the
-    # direct dental codes I, L, C, M and P.
+    # Pages previews a family name using the font itself. Safe letters can map
+    # directly to this menu alphabet. I, L, C and P keep their dental mappings;
+    # contextual ccmp rules replace them only inside “Dental Icons Up/Down”.
     for letter in MENU_LETTERS:
-        mapping[ord(letter)] = f"menu_{letter.lower()}"
+        if letter not in MENU_CODE_LETTERS:
+            mapping[ord(letter)] = f"menu_{letter.lower()}"
+            mapping[ord(letter.lower())] = f"menu_{letter.lower()}"
     # Pages filters its font menu for the active document language. Advertising
     # only ASCII makes the family disappear on a pt-BR system, even though Font
     # Book accepts it. Latin-1 coverage keeps it discoverable in Portuguese and
@@ -521,14 +566,14 @@ def package(files: list[Path]) -> Path:
         destination = macos if file.suffix == ".otf" else windows_linux if file.suffix == ".ttf" else web
         shutil.copy2(file, destination / file.name)
     (web / "dental-icons.css").write_text('''@font-face {
-  font-family: "Dental Icons Upper";
+  font-family: "Dental Icons Up";
   src: url("DentalIconsUpper-Regular.woff2") format("woff2");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
-  font-family: "Dental Icons Lower";
+  font-family: "Dental Icons Down";
   src: url("DentalIconsLower-Regular.woff2") format("woff2");
   font-style: normal;
   font-weight: 400;
@@ -542,15 +587,15 @@ def package(files: list[Path]) -> Path:
   font-variant-ligatures: common-ligatures contextual;
   font-feature-settings: "ccmp" 1, "liga" 1, "calt" 1, "kern" 1;
 }
-.dental-icons-upper { font-family: "Dental Icons Upper"; }
-.dental-icons-lower { font-family: "Dental Icons Lower"; }
+.dental-icons-upper { font-family: "Dental Icons Up"; }
+.dental-icons-lower { font-family: "Dental Icons Down"; }
 ''', encoding="utf-8")
     (staging / "LEIA-ME.txt").write_text(f'''DENTAL ICONS FONT — {VERSION}
 Autor: Dante Testa
 Site: https://www.dantetesta.com.br
 
-ODONTO ABOVE: arcada superior (arquivo Upper).
-ODONTO UNDER: arcada inferior (arquivo Lower).
+Dental Icons Up: arcada superior (arquivo Upper).
+Dental Icons Down: arcada inferior (arquivo Lower).
 Maiúsculas: dentes em perfil. Minúsculas: vista oclusal.
 
 Códigos: I, L, C, P1, P2, M1, M2, M3.
@@ -566,7 +611,7 @@ macOS / Pages / Keynote / Office para Mac
 1. Encerre os editores com Command-Q.
 2. Abra os dois OTF no Catálogo de Fontes.
 3. Se houver uma versão anterior, remova-a e instale a nova; não mantenha duplicadas.
-4. Reabra o editor e escolha ODONTO ABOVE ou ODONTO UNDER.
+4. Reabra o editor e escolha Dental Icons Up ou Dental Icons Down.
 5. Para M1/P2, habilite ligaturas padrão ou todas as ligaturas.
 
 Windows / Microsoft Office
@@ -581,7 +626,8 @@ Linux / LibreOffice / OpenOffice
 
 Web
 1. Mantenha os WOFF2 e dental-icons.css no mesmo diretório.
-2. Use as classes dental-icons-upper e dental-icons-lower.
+2. Use Dental Icons Up para a arcada superior e Dental Icons Down para a inferior.
+3. As classes dental-icons-upper e dental-icons-lower já aplicam esses mesmos nomes.
 
 Compatibilidade adicional
 Os 32 desenhos de cada família também possuem códigos Unicode PUA diretos.

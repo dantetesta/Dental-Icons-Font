@@ -5,12 +5,12 @@
   <title>WEBFONT PENDING</title>
   <style>
     @font-face {
-      font-family: "Dental Icons QA";
+      font-family: "Dental Icons Up";
       src: url("../build/fonts/DentalIconsUpper-Regular.woff2") format("woff2");
       font-style: normal;
       font-weight: 400;
     }
-    .sample { position: absolute; white-space: nowrap; font: 100px/1 "Dental Icons QA"; }
+    .sample { position: absolute; white-space: nowrap; font: 100px/1 "Dental Icons Up"; }
     #composed { font-feature-settings: "ccmp" 1, "liga" 1, "calt" 1, "kern" 1; }
     #fallback { font-feature-settings: "ccmp" 0, "liga" 0, "calt" 0, "kern" 0; }
   </style>
@@ -20,7 +20,7 @@
   <span id="fallback" class="sample">M1</span>
   <script>
     document.fonts.ready.then(() => {
-      const loaded = document.fonts.check('100px "Dental Icons QA"', 'M1');
+      const loaded = document.fonts.check('100px "Dental Icons Up"', 'M1');
       const composed = document.getElementById('composed').getBoundingClientRect().width;
       const fallback = document.getElementById('fallback').getBoundingClientRect().width;
       const passed = loaded && composed > 0 && fallback > composed;

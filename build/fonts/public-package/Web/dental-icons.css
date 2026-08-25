@@ -1,12 +1,12 @@
 @font-face {
-  font-family: "Dental Icons Upper";
+  font-family: "Dental Icons Up";
   src: url("DentalIconsUpper-Regular.woff2") format("woff2");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
-  font-family: "Dental Icons Lower";
+  font-family: "Dental Icons Down";
   src: url("DentalIconsLower-Regular.woff2") format("woff2");
   font-style: normal;
   font-weight: 400;
@@ -20,5 +20,5 @@
   font-variant-ligatures: common-ligatures contextual;
   font-feature-settings: "ccmp" 1, "liga" 1, "calt" 1, "kern" 1;
 }
-.dental-icons-upper { font-family: "Dental Icons Upper"; }
-.dental-icons-lower { font-family: "Dental Icons Lower"; }
+.dental-icons-upper { font-family: "Dental Icons Up"; }
+.dental-icons-lower { font-family: "Dental Icons Down"; }

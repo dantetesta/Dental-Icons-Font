@@ -1,9 +1,9 @@
-DENTAL ICONS FONT — 1.1.4-beta
+DENTAL ICONS FONT — 1.1.5-beta
 Autor: Dante Testa
 Site: https://www.dantetesta.com.br
 
-ODONTO ABOVE: arcada superior (arquivo Upper).
-ODONTO UNDER: arcada inferior (arquivo Lower).
+Dental Icons Up: arcada superior (arquivo Upper).
+Dental Icons Down: arcada inferior (arquivo Lower).
 Maiúsculas: dentes em perfil. Minúsculas: vista oclusal.
 
 Códigos: I, L, C, P1, P2, M1, M2, M3.
@@ -19,7 +19,7 @@ macOS / Pages / Keynote / Office para Mac
 1. Encerre os editores com Command-Q.
 2. Abra os dois OTF no Catálogo de Fontes.
 3. Se houver uma versão anterior, remova-a e instale a nova; não mantenha duplicadas.
-4. Reabra o editor e escolha ODONTO ABOVE ou ODONTO UNDER.
+4. Reabra o editor e escolha Dental Icons Up ou Dental Icons Down.
 5. Para M1/P2, habilite ligaturas padrão ou todas as ligaturas.
 
 Windows / Microsoft Office
@@ -34,7 +34,8 @@ Linux / LibreOffice / OpenOffice
 
 Web
 1. Mantenha os WOFF2 e dental-icons.css no mesmo diretório.
-2. Use as classes dental-icons-upper e dental-icons-lower.
+2. Use Dental Icons Up para a arcada superior e Dental Icons Down para a inferior.
+3. As classes dental-icons-upper e dental-icons-lower já aplicam esses mesmos nomes.
 
 Compatibilidade adicional
 Os 32 desenhos de cada família também possuem códigos Unicode PUA diretos.
