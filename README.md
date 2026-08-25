@@ -19,7 +19,7 @@ Fonte vetorial para escrever representações dentárias em documentos, apresent
 - 32 pontos Unicode PUA diretos por família para aplicativos sem ligaturas;
 - scripts reproduzíveis de vetorização, compilação OpenType e empacotamento;
 - validadores de estrutura, shaping, CoreText/macOS, WOFF2 e integridade do ZIP;
-- landing page interativa com simulador, comparação de vistas e download;
+- landing page interativa com simulador, comparação de vistas, download e localização em pt-BR, pt-PT, inglês e espanhol;
 - página técnica simples na raiz para inspeção dos desenhos.
 
 ## Autoria e proveniência
