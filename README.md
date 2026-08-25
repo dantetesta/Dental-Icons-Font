@@ -4,7 +4,7 @@ Fonte vetorial para escrever representações dentárias em documentos, apresent
 
 - **Autor e diretor criativo:** Dante Testa
 - **Site:** [www.dantetesta.com.br](https://www.dantetesta.com.br)
-- **Versão atual:** 1.1.2-beta
+- **Versão atual:** 1.1.3-beta
 - **Ano de criação:** 2026
 
 > Projeto em fase beta. A anatomia deve passar por revisão odontológica antes de uso clínico definitivo.
@@ -13,7 +13,7 @@ Fonte vetorial para escrever representações dentárias em documentos, apresent
 
 - 64 referências raster isoladas: 16 posições × 2 arcadas × 2 vistas;
 - 64 SVGs monoline reconstruídos com curvas Bézier;
-- duas famílias tipográficas: `Dental Icons Upper` e `Dental Icons Lower`;
+- duas famílias tipográficas de desktop: `ODONTO ABOVE` e `ODONTO UNDER`;
 - arquivos instaláveis TTF e OTF;
 - webfonts WOFF2 e folha CSS;
 - 32 pontos Unicode PUA diretos por família para aplicativos sem ligaturas;
@@ -53,7 +53,7 @@ O desenvolvimento foi assistido por ferramentas de inteligência artificial sob 
 | `M2` / `m2` | Segundo molar | perfil | face oclusal |
 | `M3` / `m3` | Terceiro molar | perfil | face oclusal |
 
-Use `Dental Icons Upper` para a arcada superior e `Dental Icons Lower` para a inferior. A barra vertical separa os lados e ativa as formas contextuais do lado direito:
+Use `ODONTO ABOVE` para a arcada superior e `ODONTO UNDER` para a inferior. Os nomes foram desenhados dentro da própria fonte para permanecerem legíveis no seletor do Pages; os aliases web continuam sendo `Dental Icons Upper` e `Dental Icons Lower`. A barra vertical separa os lados e ativa as formas contextuais do lado direito:
 
 ```text
 M3 M2 M1 P2 P1 C L I | I L C P1 P2 M1 M2 M3
@@ -74,7 +74,7 @@ No simulador da landing page, o controle **Caixa / vista** oferece três leitura
 1. No ZIP, abra a pasta `macOS` e instale somente `DentalIconsUpper-Regular.otf` e `DentalIconsLower-Regular.otf` no Catálogo de Fontes.
 2. Se uma versão anterior já existir, escolha **Substituir**, não **Manter Ambos**.
 3. Encerre completamente o Pages ou Keynote com `Command + Q` e abra novamente.
-4. Selecione `Dental Icons Upper` ou `Dental Icons Lower` na lista de fontes.
+4. Selecione `ODONTO ABOVE` ou `ODONTO UNDER` na lista de fontes.
 5. Se `M1` ou `P2` não formar um dente: **Formatar → Fonte → Ligadura → Usar Padrão** ou **Usar Tudo**.
 
 ### Windows e Microsoft Office

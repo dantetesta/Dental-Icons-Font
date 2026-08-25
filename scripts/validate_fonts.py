@@ -17,8 +17,8 @@ ROOT = Path(__file__).resolve().parents[1]
 FONTS = ROOT / "build" / "fonts"
 ZIP_PATH = ROOT / "dental-icons-font" / "downloads" / "dental-icons-font.zip"
 FAMILIES = {
-    "Upper": "Dental Icons Upper",
-    "Lower": "Dental Icons Lower",
+    "Upper": "ODONTO ABOVE",
+    "Lower": "ODONTO UNDER",
 }
 FORMATS = ("otf", "ttf", "woff2")
 PUA = set(range(0xE000, 0xE020))
@@ -58,7 +58,7 @@ def validate_tables(path: Path, label: str, family: str) -> None:
         require({"gasp", "prep"} <= set(font.keys()), f"{path.name}: missing TrueType rasterization tables")
 
     require(font["head"].unitsPerEm == 1000, f"{path.name}: unexpected unitsPerEm")
-    require(round(font["head"].fontRevision, 3) == 1.102, f"{path.name}: wrong revision")
+    require(round(font["head"].fontRevision, 3) == 1.103, f"{path.name}: wrong revision")
     require(font["hhea"].ascent == 800 and font["hhea"].descent == -200, f"{path.name}: bad hhea metrics")
     require(font["hhea"].numberOfHMetrics == len(font.getGlyphOrder()), f"{path.name}: compressed/incomplete hmtx")
 
@@ -120,7 +120,7 @@ def validate_fontconfig(path: Path, expected_family: str) -> None:
     require(result == f"{expected_family}|Regular", f"{path.name}: fontconfig identity mismatch: {result}")
 
 
-def validate_woff2(path: Path, family: str) -> None:
+def validate_woff2(path: Path, label: str, family: str) -> None:
     require(path.read_bytes()[:4] == b"wOF2", f"{path.name}: invalid WOFF2 signature")
     with tempfile.TemporaryDirectory(prefix="dental-woff2-") as tmp:
         copy = Path(tmp) / path.name
@@ -128,7 +128,7 @@ def validate_woff2(path: Path, family: str) -> None:
         subprocess.run(["woff2_decompress", str(copy)], check=True, capture_output=True)
         decompressed = copy.with_suffix(".ttf")
         require(decompressed.exists(), f"{path.name}: WOFF2 round trip failed")
-        validate_tables(decompressed, "Upper" if "Upper" in family else "Lower", family)
+        validate_tables(decompressed, label, family)
         validate_shaping(decompressed)
 
 
@@ -157,7 +157,7 @@ def main() -> None:
                 validate_shaping(path)
                 validate_fontconfig(path, family)
             else:
-                validate_woff2(path, family)
+                validate_woff2(path, label, family)
             print(f"PASS {path.relative_to(ROOT)}")
     validate_zip()
     print(f"PASS {ZIP_PATH.relative_to(ROOT)} (clean runtime allowlist and CRC)")

@@ -27,8 +27,8 @@ ROOT = Path(__file__).resolve().parents[1]
 VECTORS = ROOT / "assets" / "reference-vectors"
 BUILD = ROOT / "build" / "fonts"
 PUBLIC_DOWNLOADS = ROOT / "dental-icons-font" / "downloads"
-VERSION = "1.1.2-beta"
-FONT_REVISION = 1.102
+VERSION = "1.1.3-beta"
+FONT_REVISION = 1.103
 UPM = 1000
 PROFILE_HEIGHT = 194
 OCCLUSAL_HEIGHT = 112
@@ -37,6 +37,7 @@ ADVANCE = 520
 VERTICAL_SHIFT = -140
 FONT_TIMESTAMP = 3870417600  # 2026-08-24 12:00 UTC in the OpenType epoch.
 PUA_START = 0xE000
+MENU_LETTERS = "ABDENORTUV"
 LEFT_CODES = ["M3", "M2", "M1", "P2", "P1", "C", "L", "I"]
 RIGHT_CODES = ["I", "L", "C", "P1", "P2", "M1", "M2", "M3"]
 
@@ -162,6 +163,49 @@ def fallback_digit_outline(kind: str, digit: str):
     return finish_pen(pen, kind)
 
 
+def menu_letter_outline(kind: str, letter: str):
+    """Small geometric capitals used only to keep macOS font menus readable."""
+    width = 420
+    pen = drawing_pen(kind, width)
+    left, right, bottom, top, middle, stroke = 45, 375, -50, 650, 300, 44
+
+    def horizontal(y: int) -> None:
+        rectangle(pen, left, y, right, y + stroke)
+
+    def vertical(x: int, y_min: int = bottom, y_max: int = top) -> None:
+        rectangle(pen, x, y_min, x + stroke, y_max)
+
+    if letter == "A":
+        polygon(pen, [(left, bottom), (left + stroke, bottom), (211, top), (190, top)])
+        polygon(pen, [(right - stroke, bottom), (right, bottom), (230, top), (209, top)])
+        rectangle(pen, 112, 255, 308, 255 + stroke)
+    elif letter == "B":
+        vertical(left); horizontal(bottom); horizontal(middle); horizontal(top - stroke)
+        vertical(right - stroke, middle, top); vertical(right - stroke, bottom, middle + stroke)
+    elif letter == "D":
+        vertical(left); horizontal(bottom); horizontal(top - stroke); vertical(right - stroke)
+    elif letter == "E":
+        vertical(left); horizontal(bottom); horizontal(middle); horizontal(top - stroke)
+    elif letter == "N":
+        vertical(left); vertical(right - stroke)
+        polygon(pen, [(left + stroke, top), (left + 2 * stroke, top), (right - stroke, bottom), (right - 2 * stroke, bottom)])
+    elif letter == "O":
+        vertical(left); vertical(right - stroke); horizontal(bottom); horizontal(top - stroke)
+    elif letter == "R":
+        vertical(left); horizontal(middle); horizontal(top - stroke); vertical(right - stroke, middle, top)
+        polygon(pen, [(190, middle), (240, middle), (right, bottom), (right - stroke, bottom)])
+    elif letter == "T":
+        horizontal(top - stroke); rectangle(pen, 188, bottom, 232, top)
+    elif letter == "U":
+        vertical(left); vertical(right - stroke); horizontal(bottom)
+    elif letter == "V":
+        polygon(pen, [(left, top), (left + stroke, top), (211, bottom), (190, bottom)])
+        polygon(pen, [(right - stroke, top), (right, top), (230, bottom), (209, bottom)])
+    else:
+        raise ValueError(f"Unsupported menu letter: {letter}")
+    return finish_pen(pen, kind)
+
+
 def bar_outline(kind: str):
     pen = drawing_pen(kind, 180)
     rectangle(pen, 82, -80, 98, 660)
@@ -236,6 +280,8 @@ def collect_outlines(arch: str, kind: str, temporary: Path):
         "pbase": fallback_letter_outline(kind, "p"), "one": fallback_digit_outline(kind, "1"),
         "two": fallback_digit_outline(kind, "2"), "three": fallback_digit_outline(kind, "3"),
     }
+    for letter in MENU_LETTERS:
+        outlines[f"menu_{letter.lower()}"] = menu_letter_outline(kind, letter)
     for view in ("profile", "occlusal"):
         for position, code in enumerate(LEFT_CODES, 1):
             outlines[glyph_name(view, code, "l")] = outline_for(
@@ -253,8 +299,8 @@ def collect_outlines(arch: str, kind: str, temporary: Path):
 
 def font_names(arch: str):
     label = "Upper" if arch == "upper" else "Lower"
-    family = f"Dental Icons {label}"
-    return label, family, family.replace(" ", "") + "-Regular"
+    family = "ODONTO ABOVE" if arch == "upper" else "ODONTO UNDER"
+    return label, family, f"DentalIcons{label}-Regular"
 
 
 def metrics_for(glyph_order: list[str]) -> dict[str, tuple[int, int]]:
@@ -265,6 +311,8 @@ def metrics_for(glyph_order: list[str]) -> dict[str, tuple[int, int]]:
         metrics[name] = (400, 25)
     for name in ("one", "two", "three"):
         metrics[name] = (260, 25)
+    for letter in MENU_LETTERS:
+        metrics[f"menu_{letter.lower()}"] = (420, 25)
     return metrics
 
 
@@ -288,6 +336,11 @@ def character_map() -> dict[int, str]:
             mapping[PUA_START + view_index * 16 + position] = glyph_name(view, code, "r")
     for character in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789":
         mapping.setdefault(ord(character), "unsupported")
+    # Pages previews a family name using the font itself. These safe capitals
+    # make ODONTO ABOVE / ODONTO UNDER readable without stealing any of the
+    # direct dental codes I, L, C, M and P.
+    for letter in MENU_LETTERS:
+        mapping[ord(letter)] = f"menu_{letter.lower()}"
     # Pages filters its font menu for the active document language. Advertising
     # only ASCII makes the family disappear on a pt-BR system, even though Font
     # Book accepts it. Latin-1 coverage keeps it discoverable in Portuguese and
@@ -328,7 +381,7 @@ def setup_common(builder: FontBuilder, family: str, postscript: str, glyph_order
     panose.bMidline = 2
     panose.bXHeight = 3
     builder.setupOS2(
-        version=4, xAvgCharWidth=475, usWeightClass=400, usWidthClass=5, fsType=0,
+        version=4, xAvgCharWidth=465, usWeightClass=400, usWidthClass=5, fsType=0,
         ySubscriptXSize=650, ySubscriptYSize=600, ySubscriptXOffset=0, ySubscriptYOffset=75,
         ySuperscriptXSize=650, ySuperscriptYSize=600, ySuperscriptXOffset=0, ySuperscriptYOffset=350,
         yStrikeoutSize=50, yStrikeoutPosition=300, sFamilyClass=0, panose=panose,
@@ -428,8 +481,8 @@ def package(files: list[Path]) -> Path:
 Autor: Dante Testa
 Site: https://www.dantetesta.com.br
 
-Dental Icons Upper: arcada superior.
-Dental Icons Lower: arcada inferior.
+ODONTO ABOVE: arcada superior (arquivo Upper).
+ODONTO UNDER: arcada inferior (arquivo Lower).
 Maiúsculas: dentes em perfil. Minúsculas: vista oclusal.
 
 Códigos: I, L, C, P1, P2, M1, M2, M3.
@@ -445,7 +498,7 @@ macOS / Pages / Keynote / Office para Mac
 1. Encerre os editores com Command-Q.
 2. Abra os dois OTF no Catálogo de Fontes.
 3. Se houver uma versão anterior, remova-a e instale a nova; não mantenha duplicadas.
-4. Reabra o editor e escolha Dental Icons Upper ou Dental Icons Lower.
+4. Reabra o editor e escolha ODONTO ABOVE ou ODONTO UNDER.
 5. Para M1/P2, habilite ligaturas padrão ou todas as ligaturas.
 
 Windows / Microsoft Office
